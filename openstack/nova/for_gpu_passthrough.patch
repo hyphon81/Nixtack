@@ -1,0 +1,36 @@
+diff --git a/nova/virt/libvirt/config.py b/nova/virt/libvirt/config.py
+index be18b82..0d0c567 100644
+--- a/nova/virt/libvirt/config.py
++++ b/nova/virt/libvirt/config.py
+@@ -1971,6 +1971,17 @@ class LibvirtConfigGuestFeatureACPI(LibvirtConfigGuestFeature):
+         super(LibvirtConfigGuestFeatureACPI, self).__init__("acpi",
+                                                             **kwargs)
+ 
++class LibvirtConfigGuestFeatureKVM(LibvirtConfigGuestFeature):
++
++    def __init__(self, **kwargs):
++        super(LibvirtConfigGuestFeatureKVM, self).__init__("kvm",
++                                                           **kwargs)
++
++    def format_dom(self):
++        kvm = super(LibvirtConfigGuestFeatureKVM, self).format_dom()
++        kvm.append(etree.Element("hidden", state="on"))
++
++        return kvm
+ 
+ class LibvirtConfigGuestFeatureAPIC(LibvirtConfigGuestFeature):
+ 
+diff --git a/nova/virt/libvirt/driver.py b/nova/virt/libvirt/driver.py
+index 6d0e41a..6ef1850 100644
+--- a/nova/virt/libvirt/driver.py
++++ b/nova/virt/libvirt/driver.py
+@@ -4039,6 +4039,9 @@ class LibvirtDriver(driver.ComputeDriver):
+             guest.features.append(vconfig.LibvirtConfigGuestFeatureACPI())
+             guest.features.append(vconfig.LibvirtConfigGuestFeatureAPIC())
+ 
++        if (virt_type in ("kvm")):
++            guest.features.append(vconfig.LibvirtConfigGuestFeatureKVM())
++
+         if (virt_type in ("qemu", "kvm") and
+                 os_type == 'windows'):
+             hv = vconfig.LibvirtConfigGuestFeatureHyperV()

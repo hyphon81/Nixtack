@@ -31,9 +31,12 @@ buildPythonApplication rec {
     url = "https://github.com/openstack/nova/archive/${version}.tar.gz";
     sha256 = "06q3mghiai3lwhikyj4a0kkyyza9rcq66c08arn2adrpaq9wl984";
   };
-
+  patches = [
+    ./for_gpu_passthrough.patch
+  ];
+  
   # otherwise migrate.cfg is not installed
-  patchPhase = ''
+  postPatch = ''
     echo "graft nova" >> MANIFEST.in
 
     # remove transient error test, see http://hydra.nixos.org/build/40203534
@@ -133,30 +136,11 @@ buildPythonApplication rec {
     modpacks.ironicclient
     openssl
     openssh
-
-    #makeWrapper
-    #python
-    #wrapPython
-    #pythonHasOsloConcMod
+    
   ];
 
   ## can't pass test
   doCheck = false;
-
-  #installPhase = ''
-  #  runHook preInstall
-  #  dst=$out/${python.sitePackages}
-  #  #mkdir -p $out/etc
-  ##  mkdir -p $dst
-  #  export PYTHONPATH="$dst:$PYTHONPATH"
-  #  ${python.interpreter} setup.py build --executable ${pythonHasOsloConcMod}/bin/${python.libPrefix}
-  #  #${python.interpreter} setup.py build_scripts --executable ${pythonHasOsloConcMod}
-  #  ${python.interpreter} setup.py install --skip-build --prefix=$out 
-  ##  wrapPythonPrograms
-  #  #${pythonHasOsloConcMod}/bin/python2.7 setup.py install --prefix=$out
-  ##
-  #  runHook postInstall
-  #'';
 
   postInstall = ''
     cp -prvd etc $out/etc
