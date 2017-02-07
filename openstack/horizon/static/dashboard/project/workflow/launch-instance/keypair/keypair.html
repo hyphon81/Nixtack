@@ -1,0 +1,39 @@
+<div ng-controller="LaunchInstanceKeypairController as ctrl">
+  <p class="step-description" translate>
+    A key pair allows you to SSH into your newly created instance.
+    You may select an existing key pair, import a key pair, or generate a new key pair.
+  </p>
+
+  <div ng-if="ctrl.isKeypairCreated" class="alert alert-info" role="alert">
+    <p translate>A key pair named '{$ctrl.createdKeypair.name$}' was successfully created. This key pair should automatically download.</p>
+    <p translate>If not, you can manually download this keypair at the following link:</p>
+    <a class="btn btn-default" role="button" href="{$ ctrl.createdKeypair.regenerateUrl $}">
+      <span class="fa fa-download"></span>
+      {$ctrl.createdKeypair.name$}
+    </a>
+    <p translate>
+      Note: you will not be able to download this later.
+    </p>
+  </div>
+
+  <button type="button" class="btn btn-default"
+          ng-click="ctrl.createKeyPair()">
+    <span class="fa fa-plus"></span>
+    <translate>Create Key Pair</translate>
+  </button>
+  <button type="button" class="btn btn-default"
+          ng-click="ctrl.importKeyPair()">
+    <span class="fa fa-upload"></span>
+    <translate>Import Key Pair</translate>
+  </button>
+
+  <transfer-table tr-model="ctrl.tableData" limits="ctrl.tableLimits" clone-content>
+    <hz-dynamic-table
+        config="$isAvailableTable ? ctrl.availableTableConfig : ctrl.allocatedTableConfig"
+        items="$isAvailableTable ? ($sourceItems | filterAvailable:trCtrl.allocatedIds) : $sourceItems"
+        item-actions="trCtrl.itemActions"
+        filter-facets="$isAvailableTable && ctrl.filterFacets"
+        table="ctrl">
+    </hz-dynamic-table>
+  </transfer-table> <!-- End Key Pairs Table -->
+</div> <!-- End Controller -->

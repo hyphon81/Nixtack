@@ -1,0 +1,18 @@
+diff --git a/glanceclient/common/http.py b/glanceclient/common/http.py
+index 352ba10..e49442f 100644
+--- a/glanceclient/common/http.py
++++ b/glanceclient/common/http.py
+@@ -84,7 +84,12 @@ class _BaseHTTPClient(object):
+                 # Here we assume it's
+                 # a file-like object
+                 # and we'll chunk it
+-                data = self._chunk_body(data)
++                #data = self._chunk_body(data)
++
++                # WORKAROUND
++                # The chunked generator object
++                # caused creating size 0 image
++                data = data
+ 
+         headers['Content-Type'] = content_type
+         kwargs['stream'] = content_type == 'application/octet-stream'
