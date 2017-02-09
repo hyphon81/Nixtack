@@ -34,6 +34,11 @@
             "description": "Enables booting an ARM system using the specified machine type. By default, if an ARM image is used and its type is not specified, Compute uses vexpress-a15 (for ARMv7) or virt (for AArch64) machine types. Valid types can be viewed by using the virsh capabilities command (machine types are displayed in the machine tag).",
             "type": "string"
         },
+        "hw_firmware_type": {
+            "title": "Firmwate Type",
+            "description": "Enables booting from UEFI.",
+            "type": "string"
+        },
         "hw_scsi_model": {
             "title": "SCSI Model",
             "description": "Enables the use of VirtIO SCSI (virtio-scsi) to provide block device access for compute instances; by default, instances use VirtIO Block (virtio-blk). VirtIO SCSI is a para-virtualized SCSI controller device that provides improved scalability and performance, and supports advanced SCSI hardware.",

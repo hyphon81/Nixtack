@@ -18,6 +18,7 @@ let
       modpacks.oslo-concurrency
     ];
   };
+  OVMF = callPackage ../../ovmf/OVMF.nix {};
 in
 
 buildPythonApplication rec {
@@ -41,6 +42,9 @@ buildPythonApplication rec {
 
     # remove transient error test, see http://hydra.nixos.org/build/40203534
     rm nova/tests/unit/compute/test_{shelve,compute_utils}.py
+
+    # change OVMF path
+    substituteInPlace nova/virt/libvirt/driver.py --replace "/usr/share/OVMF/OVMF_CODE.fd" "${OVMF}/FV/OVMF.fd"
   '';
 
   # https://github.com/openstack/nova/blob/stable/liberty/requirements.txt
