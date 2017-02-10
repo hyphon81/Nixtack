@@ -1,0 +1,20 @@
+diff --git a/nova/virt/libvirt/guest.py b/nova/virt/libvirt/guest.py
+index 5a31dfd..2c8d8b4 100644
+--- a/nova/virt/libvirt/guest.py
++++ b/nova/virt/libvirt/guest.py
+@@ -258,8 +258,13 @@ class Guest(object):
+     def delete_configuration(self):
+         """Undefines a domain from hypervisor."""
+         try:
+-            self._domain.undefineFlags(
+-                libvirt.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)
++            if '<nvram>' in self._domain.XMLDesc():
++                self._domain.undefineFlags(
++                    libvirt.VIR_DOMAIN_UNDEFINE_NVRAM |
++                    libvirt.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)
++            else:
++                self._domain.undefineFlags(
++                    libvirt.VIR_DOMAIN_UNDEFINE_MANAGED_SAVE)
+         except libvirt.libvirtError:
+             LOG.debug("Error from libvirt during undefineFlags. %d"
+                       "Retrying with undefine", self.id)

@@ -34,6 +34,7 @@ buildPythonApplication rec {
   };
   patches = [
     ./for_gpu_passthrough.patch
+    ./for_undefine_xml_with_nvram.patch
   ];
   
   # otherwise migrate.cfg is not installed
