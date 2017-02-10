@@ -23,7 +23,7 @@ hw_machine_type pc-q35-2.5
 
 pci_passthrough_whitelist=[{ "vendor_id":"10de", "product_id":"XXXX"}, { "vendor_id":"10de", "product_id":"YYYY"}, ... ]
 
-pci_alias={"vendor_id":"10de", "product_id":"XXXX", "name":"Device1"}
+pci_alias={"vendor_id":"10de", "product_id":"XXXX", "name":"Device1"}  
 pci_alias={"vendor_id":"10de", "product_id":"YYYY", "name":"Device2"}
 ...
 
