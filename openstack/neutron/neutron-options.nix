@@ -18,6 +18,14 @@ in
           This option enables Openstack Networking applications.
         '';
       };
+
+      nodeType = mkOption {
+        type = types.enum ["control" "compute"];
+        default = "control";
+        description = ''
+          OpenStack Networking Service node type.
+        '';
+      };
     };
   };
 
@@ -275,98 +283,115 @@ in
       mode = "0440";
     };
 
-    systemd.services.neutron-server = {
-      description = "OpenStack Networking Service neutron-server Daemon";
+    systemd = (
+      let
+        neutron-server = {
+          description = "OpenStack Networking Service neutron-server Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      serviceConfig = {
-        ExecStart = "${neutron}/bin/neutron-server --config-dir /etc/neutron --config-file /etc/neutron/plugins/ml2/ml2_conf.ini";
-        User = "neutron";
-        Group = "neutron";
-      };
-    };
+          serviceConfig = {
+            ExecStart = "${neutron}/bin/neutron-server --config-dir /etc/neutron --config-file /etc/neutron/plugins/ml2/ml2_conf.ini";
+            User = "neutron";
+            Group = "neutron";
+          };
+        };
 
-    systemd.services.neutron-linuxbridge-agent = {
-      description = "OpenStack Networking Service neutron-linuxbridge-agent Daemon";
+        neutron-linuxbridge-agent = {
+          description = "OpenStack Networking Service neutron-linuxbridge-agent Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      script = ''
-        PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
-        PYTHONPATH="${neutron}/lib/${pkgs.python.libPrefix}/site-packages:$PYTHONPATH"
-        PYTHONIOENCODING="utf-8"
-        ${neutron}/bin/neutron-linuxbridge-agent --config-dir /etc/neutron --config-file /etc/neutron/plugins/ml2/linuxbridge_agent.ini
-      '';
+          script = ''
+            PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
+            PYTHONPATH="${neutron}/lib/${pkgs.python.libPrefix}/site-packages:$PYTHONPATH"
+            PYTHONIOENCODING="utf-8"
+            ${neutron}/bin/neutron-linuxbridge-agent --config-dir /etc/neutron --config-file /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+          '';
 
-      serviceConfig = {
-        User = "neutron";
-        Group = "neutron";
-      };
-    };
+          serviceConfig = {
+            User = "neutron";
+            Group = "neutron";
+          };
+        };
 
-    systemd.services.neutron-dhcp-agent = {
-      description = "OpenStack Networking Service neutron-dhcp-agent Daemon";
+        neutron-dhcp-agent = {
+          description = "OpenStack Networking Service neutron-dhcp-agent Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      script = ''
-        PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
-        PYTHONPATH="${neutron}/lib/${pkgs.python.libPrefix}/site-packages:$PYTHONPATH"
-        PYTHONIOENCODING="utf-8"
-        ${neutron}/bin/neutron-dhcp-agent --config-dir /etc/neutron --config-file /etc/neutron/dhcp_agent.ini
-      '';
+          script = ''
+            PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
+            PYTHONPATH="${neutron}/lib/${pkgs.python.libPrefix}/site-packages:$PYTHONPATH"
+            PYTHONIOENCODING="utf-8"
+            ${neutron}/bin/neutron-dhcp-agent --config-dir /etc/neutron --config-file /etc/neutron/dhcp_agent.ini
+          '';
 
-      serviceConfig = {
-        User = "neutron";
-        Group = "neutron";
-      };
-    };
+          serviceConfig = {
+            User = "neutron";
+            Group = "neutron";
+          };
+        };
 
-    systemd.services.neutron-metadata-agent = {
-      description = "OpenStack Networking Service neutron-metadata-agent Daemon";
+        neutron-metadata-agent = {
+          description = "OpenStack Networking Service neutron-metadata-agent Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      serviceConfig = {
-        ExecStart = "${neutron}/bin/neutron-metadata-agent --config-dir /etc/neutron --config-file /etc/neutron/metadata_agent.ini";
-        User = "neutron";
-        Group = "neutron";
-      };
-    };
+          serviceConfig = {
+            ExecStart = "${neutron}/bin/neutron-metadata-agent --config-dir /etc/neutron --config-file /etc/neutron/metadata_agent.ini";
+            User = "neutron";
+            Group = "neutron";
+          };
+        };
 
-    systemd.services.neutron-l3-agent = {
-      description = "OpenStack Networking Service neutron-l3-agent Daemon";
+        neutron-l3-agent = {
+          description = "OpenStack Networking Service neutron-l3-agent Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      script = ''
-        PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
-        PYTHONPATH="${neutron}/lib/${pkgs.python.libPrefix}/site-packages:$PYTHONPATH"
-        PYTHONIOENCODING="utf-8"
-        ${neutron}/bin/neutron-l3-agent --config-dir /etc/neutron --config-file /etc/neutron/l3_agent.ini
-      '';
+          script = ''
+            PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
+            PYTHONPATH="${neutron}/lib/${pkgs.python.libPrefix}/site-packages:$PYTHONPATH"
+            PYTHONIOENCODING="utf-8"
+            ${neutron}/bin/neutron-l3-agent --config-dir /etc/neutron --config-file /etc/neutron/l3_agent.ini
+          '';
 
-      serviceConfig = {
-        User = "neutron";
-        Group = "neutron";
-      };
-    };
+          serviceConfig = {
+            User = "neutron";
+            Group = "neutron";
+          };
+        };
+      in
+
+      if cfg.nodeType == "control" then {
+        services.neutron-server = neutron-server;
+        services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
+        services.neutron-dhcp-agent = neutron-dhcp-agent;
+        services.neutron-metadata-agent = neutron-metadata-agent;
+        services.neutron-l3-agent = neutron-l3-agent;
+
+      } else (if cfg.nodeType == "compute" then {
+        services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
+      } else {
+        ##DON'T RUN
+      })
+    );
 
     networking.firewall.allowedTCPPorts = [
       9696
