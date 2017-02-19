@@ -396,6 +396,10 @@ in
     networking.firewall.allowedTCPPorts = [
       9696
     ];
+    networking.firewall.allowedUDPPorts = [
+      # Allow vxlan
+      8472
+    ];
     networking.firewall.checkReversePath = false;
     networking.firewall.logReversePathDrops = true;
   };
