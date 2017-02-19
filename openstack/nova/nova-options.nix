@@ -19,6 +19,14 @@ in
           This option enables Openstack Compute applications.
         '';
       };
+
+      nodeType = mkOption {
+        type = types.enum ["control" "compute"];
+        default = "control";
+        description = ''
+          OpenStack Compute Service node type.
+        '';
+      };
     };
   };
 
@@ -115,119 +123,138 @@ in
       mode = "0440";
     };
 
-    systemd.services.nova-api = {
-      description = "OpenStack Compute Service nova-api Daemon";
+    systemd = (
+      let
+        nova-api = {
+          description = "OpenStack Compute Service nova-api Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      preStart = ''
-        if [ ! -d "/var/lib/nova/log" ]; then
-          mkdir -p /var/lib/nova/log
-        fi
-      '';
+          preStart = ''
+            if [ ! -d "/var/lib/nova/log" ]; then
+              mkdir -p /var/lib/nova/log
+            fi
+          '';
 
-      script = ''
-        PATH="/var/setuid-wrappers:$PATH"
-        ${nova}/bin/nova-api
-      '';
+          script = ''
+            PATH="/var/setuid-wrappers:$PATH"
+            ${nova}/bin/nova-api
+          '';
 
-      serviceConfig = {
-        User = "nova";
-        Group = "nova";
-      };
-    };
+          serviceConfig = {
+            User = "nova";
+            Group = "nova";
+          };
+        };
 
-    systemd.services.nova-compute = {
-      description = "OpenStack Compute Service nova-compute Daemon";
+        nova-compute = {
+          description = "OpenStack Compute Service nova-compute Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      preStart = ''
-        if [ ! -d "/var/lib/nova/log" ]; then
-          mkdir -p /var/lib/nova/log
-        fi
-        if [ ! -d "/var/lib/nova/instances" ]; then
-          mkdir -p /var/lib/nova/instances
-        fi
-      '';
+          preStart = ''
+            if [ ! -d "/var/lib/nova/log" ]; then
+              mkdir -p /var/lib/nova/log
+            fi
+            if [ ! -d "/var/lib/nova/instances" ]; then
+              mkdir -p /var/lib/nova/instances
+            fi
+          '';
 
-      script = ''
-        PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
-        PYTHONIOENCODING="utf-8"
-        ${nova}/bin/nova-compute
-      '';
+          script = ''
+            PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
+            PYTHONIOENCODING="utf-8"
+            ${nova}/bin/nova-compute
+          '';
 
-      serviceConfig = {
-        User = "nova";
-        Group = "nova";
-      };
-    };
+          serviceConfig = {
+            User = "nova";
+            Group = "nova";
+          };
+        };
 
-    systemd.services.nova-conductor = {
-      description = "OpenStack Compute Service nova-conductor Daemon";
+        nova-conductor = {
+          description = "OpenStack Compute Service nova-conductor Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      serviceConfig = {
-        ExecStart = "${nova}/bin/nova-conductor";
-        User = "nova";
-        Group = "nova";
-      };
-    };
+          serviceConfig = {
+            ExecStart = "${nova}/bin/nova-conductor";
+            User = "nova";
+            Group = "nova";
+          };
+        };
 
-    systemd.services.nova-consoleauth = {
-      description = "OpenStack Compute Service nova-consoleauth Daemon";
+        nova-consoleauth = {
+          description = "OpenStack Compute Service nova-consoleauth Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      serviceConfig = {
-        ExecStart = "${nova}/bin/nova-consoleauth";
-        User = "nova";
-        Group = "nova";
-      };
-    };
+          serviceConfig = {
+            ExecStart = "${nova}/bin/nova-consoleauth";
+            User = "nova";
+            Group = "nova";
+          };
+        };
 
-    systemd.services.nova-novncproxy = {
-      description = "OpenStack Compute Service nova-novncproxy Daemon";
+        nova-novncproxy = {
+          description = "OpenStack Compute Service nova-novncproxy Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      serviceConfig = {
-        ExecStart = "${nova}/bin/nova-novncproxy --web ${novnc}";
-        User = "nova";
-        Group = "nova";
-      };
-    };
+          serviceConfig = {
+            ExecStart = "${nova}/bin/nova-novncproxy --web ${novnc}";
+            User = "nova";
+            Group = "nova";
+          };
+        };
 
-    systemd.services.nova-scheduler = {
-      description = "OpenStack Compute Service nova-scheduler Daemon";
+        nova-scheduler = {
+          description = "OpenStack Compute Service nova-scheduler Daemon";
 
-      wantedBy = [ "multi-user.target" ];
-      after = [
-        "systemd-udev-settle.service"
-      ];
+          wantedBy = [ "multi-user.target" ];
+          after = [
+            "systemd-udev-settle.service"
+          ];
 
-      serviceConfig = {
-        ExecStart = "${nova}/bin/nova-scheduler";
-        User = "nova";
-        Group = "nova";
-      };
-    };
+          serviceConfig = {
+            ExecStart = "${nova}/bin/nova-scheduler";
+            User = "nova";
+            Group = "nova";
+          };
+        };
+      in
+
+      if cfg.nodeType == "control" then {
+        services.nova-api = nova-api;
+        services.nova-compute = nova-compute;
+        services.nova-conductor = nova-conductor;
+        services.nova-consoleauth = nova-consoleauth;
+        services.nova-novncproxy = nova-novncproxy;
+        services.nova-scheduler = nova-scheduler;
+
+      } else (if cfg.nodeType == "compute" then {
+        services.nova-compute = nova-compute;
+
+      } else {
+        ##DON'T RUN
+      })
+    );
 
     networking.firewall.allowedTCPPorts = [
       8774
