@@ -3466,4 +3466,63 @@ with python2Packages;
       sphinx_1_2
     ];
   };
+
+  ironic-lib = buildPythonPackage rec {
+    name = "ironic-lib-${version}";
+    version = "2.1.3";
+
+    PBR_VERSION = "${version}";
+
+    src = fetchurl {
+      url = "https://github.com/openstack/ironic-lib/archive/${version}.tar.gz";
+      sha256 = "0c76bxmyn1q3qajl0c24b2w17njgpf051svm4i05p56wdyw0m37d";
+    };
+
+    propagatedBuildInputs = [
+      pbr
+      modpacks.oslo-config
+      modpacks.oslo-i18n
+      modpacks.oslo-service
+      modpacks.oslo-utils
+      requests2
+      six
+      modpacks.oslo-log
+
+      pythonHasOsloConcMod
+    ];
+
+    ## can't pass test
+    doCheck = false;
+  };
+
+  dib-utils = buildPythonPackage rec {
+    name = "dib-utils-${version}";
+    version = "0.0.11";
+
+    src = fetchurl {
+      url = "https://pypi.python.org/packages/37/9b/8d1a0d9627b4d206fd3ede24e8fbca23a4336368dd293e6e7f37cf04ef6f/dib-utils-0.0.11.tar.gz";
+      sha256 = "0b47f0sn5sgbsmf2hwd4hkikzsxh52m50gnj6d24ssk24ip37ijr";
+    };
+  };
+
+  oslosphinx_4_10 = buildPythonPackage rec {
+    name = "oslosphinx-${version}";
+    version = "4.10.0";
+
+    PBR_VERSION = "${version}";
+
+    src = fetchurl {
+      url = "https://github.com/openstack/oslosphinx/archive/${version}.tar.gz";
+      sha256 = "1l139gl52xfx2cccjsg2s4rcj9g8cjz3ridb0c56j9j553005807";
+    };
+
+    propagatedBuildInputs = [
+      pbr
+      requests2
+      six
+    ];
+
+    ## can't pass test
+    doCheck = false;
+  };
 }
