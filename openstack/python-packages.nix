@@ -1253,14 +1253,15 @@ with python2Packages;
   };
 
   dogpile_cache = buildPythonPackage rec {
-    name = "dogpile.cache-0.6.2";
+    name = "dogpile.cache-${version}";
+    version = "0.6.2";
 
     propagatedBuildInputs = [
       dogpile_core
     ];
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/9d/a9/ba70aadc6170841a1c6145e9039d4b1c2a4ef8c44cd0ca9b09ab79be9120/dogpile.cache-0.6.2.tar.gz";
+      url = "mirror://pypi/d/dogpile.cache/dogpile.cache-${version}.tar.gz";
       sha256 = "0vbja38pw05bylvmaqaclfm0q8m4mjzml0gfng2nvbq7mxqk8ybk";
     };
 
@@ -1269,10 +1270,11 @@ with python2Packages;
   };
 
   eventlet = buildPythonPackage rec {
-    name = "eventlet-0.18.2";
+    name = "eventlet-${version}";
+    version = "0.18.2";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/81/ff/8388f9878efb27d3fb597585e22d9a134a1678e0be041e1ad8846d002fb1/eventlet-0.18.2.tar.gz";
+      url = "mirror://pypi/e/eventlet/eventlet-${version}.tar.gz";
       sha256 = "1mcy0vk30z7xdygr80i7nbwy536qwk8sfl4j5zmcbqwhiziy0qgr";
     };
 
@@ -1482,7 +1484,7 @@ with python2Packages;
     name = "routes-1.12.3";
 
     src = fetchurl {
-      url = mirror://pypi/R/Routes/Routes-1.12.3.tar.gz;
+      url = "mirror://pypi/R/Routes/Routes-1.12.3.tar.gz";
       sha256 = "eacc0dfb7c883374e698cebaa01a740d8c78d364b6e7f3df0312de042f77aa36";
     };
 
@@ -1494,10 +1496,11 @@ with python2Packages;
   };
 
   alembic = buildPythonPackage rec {
-    name = "alembic-0.8.10";
+    name = "alembic-${version}";
+    version = "0.8.10";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/f0/7d/7fcda63887d9726e0145e98802baf374ec8cf889325e469194cd7926c98e/alembic-0.8.10.tar.gz";
+      url = "mirror://pypi/a/alembic/${name}.tar.gz";
       sha256 = "06br9sfqypnjlal6fsbnky3zb0askwcn3diz8k3kwa0qcblm0fqf";
     };
 
@@ -2214,7 +2217,7 @@ with python2Packages;
     version = "2.0.2";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/60/bf/62567830b700d9f6930e9ab6831d6ba256f7b0b730acb37278b0ccdffacf/pydotplus-2.0.2.tar.gz";
+      url = "mirror://pypi/p/pydotplus/${name}.tar.gz";
       sha256 = "1i05cnk3yh722fdyaq0asr7z9xf7v7ikbmnpxa8j6pdqx6g5xs4i";
     };
 
@@ -2435,7 +2438,7 @@ with python2Packages;
     version = "1.4.1";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/b7/42/56e25f6444d6254ae24b60d0da9cd8f4652db356088de91baffc1d42c624/wsgi_intercept-1.4.1.tar.gz";
+      url = "mirror://pypi/w/wsgi_intercept/wsgi_intercept-${version}.tar.gz";
       sha256 = "0n0ldx60h4s49l1vcf5a6rfpxmqjv6882rk9sx9snvx0x5ywsi52";
     };
 
@@ -3090,7 +3093,7 @@ with python2Packages;
     version = "1.4.10.1";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/ad/a3/214ecd6ac64f623689123459dff178d6e44603d7425c9e0c361d74e2f20a/XStatic-Angular-1.4.10.1.tar.gz";
+      url = "mirror://pypi/x/XStatic-Angular/XStatic-Angular-${version}.tar.gz";
       sha256 = "0i4a8dk4kik73v3zy8yzqz44ak62kqb3z6jp13lhblh4sav7scps";
     };
   };
@@ -3100,8 +3103,8 @@ with python2Packages;
     version = "0.11.0.8";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/4f/ec/3b0382ca2ef18002cad5268de61be72b437fcd2416323889059e2d07cf50/XStatic-Angular-Bootstrap-0.11.0.2.tar.gz";
-      sha256 = "0gkvvj9zcjigmblrjm0k40zrypj5w2ngc8dmfq3lc0600jzjir6b";
+      url = "mirror://pypi/X/XStatic-Angular-Bootstrap/XStatic-Angular-Bootstrap-${version}.tar.gz";
+      sha256 = "1l5hkqfdsfwi1mpkl7m9qz17p4dfv7w5dbc9djxpy2jk0rsb28xg";
     };
   };
 
@@ -3121,7 +3124,7 @@ with python2Packages;
     version = "2.1.0.2";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/70/bf/e25f7710aeeba6a400e057e491bdaa3791738a14e7a86d637f266440206e/XStatic-Angular-Gettext-2.1.0.2.tar.gz";
+      url = "mirror://pypi/X/XStatic-Angular-Gettext/XStatic-Angular-Gettext-${version}.tar.gz";
       sha256 = "14x4kz1sx2fnr0xrqc1nqwl537q8r685dmnd4a17vy5j7d1myx60";
     };
   };
@@ -3215,7 +3218,7 @@ with python2Packages;
     PBR_VERSION="${version}";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/c2/83/c69e8a059f32f84d78270731ef096b440469b7cddc2208cf320574bd3431/XStatic-Jasmine-2.4.1.1.tar.gz";
+      url = "mirror://pypi/X/XStatic-Jasmine/XStatic-Jasmine-${version}.tar.gz";
       sha256 = "0h27piyjnfi28la2k4gv8ykixrg9jzqrbb8a5k687xhw1qybzs6i";
     };
   };
@@ -3258,7 +3261,7 @@ with python2Packages;
     version = "2.0.0.2";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/71/c6/2dcc0a0e072631a4e51723f403f4cd4635069a2bc4a05a907c8dad2c4c45/XStatic-JSEncrypt-2.0.0.2.tar.gz";
+      url = "mirror://pypi/X/XStatic-JSEncrypt/XStatic-JSEncrypt-${version}.tar.gz";
       sha256 = "1d9699prd7dfmrxdcwc2j3mlm9chs7dbc421iy2cg03gzhm8jljq";
     };
   };
@@ -3268,7 +3271,7 @@ with python2Packages;
     version = "1.4.57.0";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/1f/88/cf7cc57a60949a7a717b3bcfcc64fdcaa73f8b17f305865e262bbe2b38d1/XStatic-mdi-${version}.tar.gz";
+      url = "mirror://pypi/X/XStatic-mdi/XStatic-mdi-${version}.tar.gz";
       sha256 = "0lwa189lxwxxirqg6qsxp6lapss5rxzi8f9vi7igwqpsz0idbd0r";
     };
   };
@@ -3330,7 +3333,7 @@ with python2Packages;
     version = "0.0.7.0";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/63/7a/7bfec29f5f28fdda7170ebbbb2204aeb1d33d6050f3476a807590de06434/XStatic-term.js-0.0.7.0.tar.gz";
+      url = "mirror://pypi/X/XStatic-term.js/XStatic-term.js-${version}.tar.gz";
       sha256 = "0cdx8baadib4lnv1pf65a4nqxc5an88km4al8bq930v3rdlspwxm";
     };
     
@@ -3500,7 +3503,7 @@ with python2Packages;
     version = "0.0.11";
 
     src = fetchurl {
-      url = "https://pypi.python.org/packages/37/9b/8d1a0d9627b4d206fd3ede24e8fbca23a4336368dd293e6e7f37cf04ef6f/dib-utils-0.0.11.tar.gz";
+      url = "mirror://pypi/d/dib-utils/dib-utils-${version}.tar.gz";
       sha256 = "0b47f0sn5sgbsmf2hwd4hkikzsxh52m50gnj6d24ssk24ip37ijr";
     };
   };
