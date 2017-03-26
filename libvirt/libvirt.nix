@@ -1,4 +1,3 @@
-#with import <nixpkgs> {};
 { stdenv, fetchurl, fetchpatch
 , pkgconfig, makeWrapper
 , libxml2, gnutls, devicemapper, perl, python2
@@ -12,10 +11,6 @@
 
 let
   OVMF = callPackage ../ovmf/OVMF.nix {};
-  #qemu = callPackage ../qemu/qemu_25.nix {
-  #  inherit (darwin.apple_sdk.frameworks) CoreServices Cocoa;
-  #  inherit (darwin.stubs) rez setfile;
-  #};
 in
 
 stdenv.mkDerivation rec {

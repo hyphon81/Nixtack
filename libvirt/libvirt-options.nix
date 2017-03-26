@@ -14,7 +14,7 @@ let
     ${cfg.extraConfig}
   '';
   libvirt = with pkgs; callPackage ./libvirt.nix {};
-  qemu = with pkgs; callPackage ../qemu/qemu_25.nix {
+  qemu = with pkgs; callPackage ../qemu/qemu_28.nix {
     inherit (darwin.apple_sdk.frameworks) CoreServices Cocoa;
     inherit (darwin.stubs) rez setfile;
   };
