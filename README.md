@@ -1,4 +1,4 @@
-# nixosGPUPassthroughOpenStack
+# Nixtack
 This code for construction GPUPassthrough and OpenStack environment on NixOS.
 
 This code assumes environments refer from "OpenStack Installation Tutorial for Ubuntu".
@@ -17,14 +17,14 @@ This code assumes environments refer from "OpenStack Installation Tutorial for U
 ### Image metadata
 
 hw_firmware_type uefi  
-hw_machine_type pc-q35-2.5
+hw_machine_type pc-q35-2.8
 
 ### /etc/nova/nova.conf
 
 pci_passthrough_whitelist=[{ "vendor_id":"10de", "product_id":"XXXX"}, { "vendor_id":"10de", "product_id":"YYYY"}, ... ]
 
-pci_alias={"vendor_id":"10de", "product_id":"XXXX", "name":"Device1"}  
-pci_alias={"vendor_id":"10de", "product_id":"YYYY", "name":"Device2"}  
+pci_alias={"vendor_id":"10de", "product_id":"XXXX", "name":"Device1", "device_type":"type-PCI"}  
+pci_alias={"vendor_id":"10de", "product_id":"YYYY", "name":"Device2", "device_type":"type-PCI"}  
 ...
 
 ### Flavor metadata
