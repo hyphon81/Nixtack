@@ -3090,11 +3090,11 @@ with python2Packages;
 
   xstatic-angular = buildPythonPackage rec {
     name = "xstatic-angular-${version}";
-    version = "1.4.10.1";
+    version = "1.5.8.0";
 
     src = fetchurl {
-      url = "mirror://pypi/x/XStatic-Angular/XStatic-Angular-${version}.tar.gz";
-      sha256 = "0i4a8dk4kik73v3zy8yzqz44ak62kqb3z6jp13lhblh4sav7scps";
+      url = "mirror://pypi/X/XStatic-Angular/XStatic-Angular-${version}.tar.gz";
+      sha256 = "0cxhkq9k7b72r87z2lgm0mxl9hpzh322mflbd4jic16kcrxdvp5i";
     };
   };
 
