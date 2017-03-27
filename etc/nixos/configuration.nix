@@ -15,7 +15,7 @@ in
       ./hardware-configuration.nix
 
       # Include OpenStack options plugin file
-      /path/to/forGPUPassthrough/optionsPlugin.nix
+      /path/to/optionsPlugin.nix
     ];
 
   nixpkgs.config.allowUnfree = true;
@@ -114,13 +114,7 @@ in
     #openstackApps.libvirt_25
     #openstackApps.qemu_25
     #openstackApps.virtmanager
-    
     #openstackApps.openstackclient
-    #openstackApps.keystone
-    #openstackApps.glance
-    #openstackApps.nova
-    #openstackApps.neutron.nix
-    #openstackApps.horizon.nix
     #############################
   ];
 
