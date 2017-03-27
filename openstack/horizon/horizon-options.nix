@@ -211,7 +211,7 @@ in
         CACHES = {
             'default': {
                     'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-                    'LOCATION': '${cfg.memcachedServer}:${cfg.memcachedPort}',
+                    'LOCATION': '${cfg.memcachedServer}:${toString cfg.memcachedPort}',
             },
         }
 
