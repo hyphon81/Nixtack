@@ -917,7 +917,7 @@ in
         mkdir -m 0755 -p /var/lib/horizon/openstack_dashboard
         mkdir -m 0755 -p /var/lib/horizon/openstack_dashboard/local/enabled
 
-        ln -s /etc/horizon/local_settings.py /var/lib/horizon/openstack_dashboard/local_settings.py
+        ln -s /etc/horizon/local_settings.py /var/lib/horizon/openstack_dashboard/local/local_settings.py
 
         touch /var/lib/horizon/openstack_dashboard/local/__init__.py
         touch /var/lib/horizon/openstack_dashboard/local/enabled/__init__.py
@@ -929,6 +929,7 @@ in
         ${pkgs.python27}/bin/python ${horizon}/bin/manage.py collectstatic --noinput
         chmod 0755 /var/lib/horizon/static
 
+        chmod 0755 /var/lib/horizon
         chown horizon:nginx -R /var/lib/horizon
       '';
 
