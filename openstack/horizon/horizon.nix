@@ -148,7 +148,7 @@ buildPythonApplication rec {
     cp manage.py $out/bin/manage.py
     chmod +x $out/bin/manage.py
 
-    substituteInPlace $out/lib/${python.libPrefix}/site-packages/openstack_dashboard/settings.py --replace "STATIC_ROOT = None" "STATIC_ROOT = /var/lib/horizon/static"
+    substituteInPlace $out/lib/${python.libPrefix}/site-packages/openstack_dashboard/settings.py --replace "STATIC_ROOT = None" "STATIC_ROOT = '/var/lib/horizon/static'"
 
     runHook postInstall
   '';
