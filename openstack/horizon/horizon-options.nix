@@ -232,7 +232,7 @@ in
         #    ('http://cluster2.example.com:5000/v2.0', 'cluster2'),
         #]
 
-        OPENSTACK_HOST = ${cfg.keystoneServer}
+        OPENSTACK_HOST = '${cfg.keystoneServer}'
         OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
         OPENSTACK_KEYSTONE_DEFAULT_ROLE = "user"
 
