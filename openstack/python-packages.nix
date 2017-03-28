@@ -335,7 +335,7 @@ with python2Packages;
     '';
 
     postInstall = ''
-      cp os_client_config/*.json $out/lib/python2.7/site-packages/os_client_config/
+      cp os_client_config/*.json $out/lib/${python.libPrefix}/site-packages/os_client_config/
     '';
   };
 
