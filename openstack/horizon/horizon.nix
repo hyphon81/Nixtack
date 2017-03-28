@@ -134,6 +134,10 @@ buildPythonApplication rec {
     pythonHasOsloConcMod
   ];
 
+  preInstall = ''
+    substituteInPlace openstack_dashboard/settings.py --replace "STATIC_ROOT = None" "STATIC_ROOT = '/var/lib/horizon/static'"
+  '';
+
   installPhase = ''
     runHook preInstall
 
@@ -148,17 +152,14 @@ buildPythonApplication rec {
     cp manage.py $out/bin/manage.py
     chmod +x $out/bin/manage.py
 
-    substituteInPlace $out/lib/${python.libPrefix}/site-packages/openstack_dashboard/settings.py --replace "STATIC_ROOT = None" "STATIC_ROOT = '/var/lib/horizon/static'"
-
     runHook postInstall
   '';
 
   postInstall = ''
     rm -r $out/lib/python2.7/site-packages/openstack_dashboard/local
-    ln -s /var/lib/horizon/openstack_dashboard/local $out/lib/python2.7/site-packages/openstack_dashboard/local
-    #ln -s /var/lib/horizon/static $out/lib/python2.7/site-packages/static
+    ln -s /var/lib/horizon/openstack_dashboard/local $out/lib/${python.libPrefix}/site-packages/openstack_dashboard/local
 
-    ln -s /var/lib/horizon/openstack_dashboard/conf $out/lib/python2.7/site-packages/openstack_dashboard/conf
+    ln -s /var/lib/horizon/openstack_dashboard/conf $out/lib/${python.libPrefix}/site-packages/openstack_dashboard/conf
     
   '';
 

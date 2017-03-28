@@ -2206,7 +2206,7 @@ in
 
         "/static" = {
           extraConfig = ''
-            alias ${horizon}/lib/python2.7/site-packages/openstack_dashboard/local;
+            alias /var/lib/horizon/static;
           '';
         };
       };
