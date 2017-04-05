@@ -2225,7 +2225,7 @@ in
         socket = "/run/uwsgi/horizon.socket";
         chmod-socket = 660;
         pidfile = "/run/uwsgi/horizon.pid";
-        logto = "/run/uwsgi/horizon.log";
+        #logto = "/run/uwsgi/horizon.log";
 
         chdir = "/var/lib/horizon";
 

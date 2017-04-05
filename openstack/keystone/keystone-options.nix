@@ -73,16 +73,8 @@ in
 
     users.extraGroups.keystone.gid = 91;
 
-    #environment.etc."keystone/default_catalog.templates" = {
-    #  enable = true;
-    #  source = ./etc/default_catalog.templates;
-    #  uid = 91;
-    #  gid = 91;
-    #  mode = "0640";
-    #};
     environment.etc."keystone/keystone.conf" = {
       enable = true;
-      #source = ./etc/keystone.conf;
       uid = 91;
       gid = 91;
       mode = "0640";
@@ -177,7 +169,6 @@ in
     };
     environment.etc."keystone/keystone-paste.ini" = {
       enable = true;
-      #source = ./etc/keystone-paste.ini;
       uid = 91;
       gid = 91;
       mode = "0640";
@@ -278,9 +269,9 @@ in
         / = admin_version_api
       '';
     };
+
     environment.etc."keystone/logging.conf" = {
       enable = true;
-      #source = ./etc/logging.conf;
       uid = 91;
       gid = 91;
       mode = "0640";
@@ -352,9 +343,9 @@ in
         format=(%(name)s): %(asctime)s %(levelname)s %(module)s %(funcName)s %(message)s
       '';
     };
+
     environment.etc."keystone/policy.json" = {
       enable = true;
-      #source = ./etc/policy.json;
       uid = 91;
       gid = 91;
       mode = "0640";
@@ -556,16 +547,10 @@ in
             "identity:update_domain_config": "rule:admin_required",
             "identity:delete_domain_config": "rule:admin_required",
             "identity:get_domain_config_default": "rule:admin_required"
-}
+        }
       '';
     };
-    #environment.etc."keystone/policy.v3cloudsample.json" = {
-    #  enable = true;
-    #  source = ./etc/policy.v3cloudsample.json;
-    #  uid = 91;
-    #  gid = 91;
-    #  mode = "0640";
-    #};
+
     environment.etc."keystone/sso_callback_template.html" = {
       enable = true;
       source = ./etc/sso_callback_template.html;

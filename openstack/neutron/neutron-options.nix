@@ -26,6 +26,46 @@ in
           OpenStack Networking Service node type.
         '';
       };
+
+      enableServer = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          This option enables neutron-server daemon.
+        '';
+      };
+
+      enableLinuxbridgeAgent = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          This option enables neutron-linuxbridge-agent daemon.
+        '';
+      };
+
+      enableDhcpAgent = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          This option enables neutron-dhcp-agent daemon.
+        '';
+      };
+
+      enableMetadataAgent = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          This option enables neutron-metadata-agent daemon.
+        '';
+      };
+
+      enableL3Agent = mkOption {
+        type = types.nullOr types.bool;
+        default = null;
+        description = ''
+          This option enables neutron-l3-agent daemon.
+        '';
+      };
     };
   };
 
@@ -380,18 +420,23 @@ in
       in
 
       if cfg.nodeType == "control" then {
-        services.neutron-server = neutron-server;
-        services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
-        services.neutron-dhcp-agent = neutron-dhcp-agent;
-        services.neutron-metadata-agent = neutron-metadata-agent;
-        services.neutron-l3-agent = neutron-l3-agent;
-
+        cfg.enableServer ? true;
+        cfg.enableLinuxbridgeAgent ? true;
+        cfg.enableDhcpAgent ? true;
+        cfg.enableMetadataAgent ? true;
+        cfg.enableL3Agent ? true;
       } else (if cfg.nodeType == "compute" then {
-        services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
+        cfg.enableLinuxbridgeAgent ? true;
       } else {
-        ##DON'T RUN
+        ##UNREACHABLE
       })
     );
+
+    if cfg.enableServer == true then services.neutron-server = neutroon-server else null;
+    if cfg.enableLinuxbridgeAgent == true then service.neutron-linuxbridge-agent = neutron-linuxbridge-agent else null;
+    if cfg.enableDhcpAgent == true then service.neutron-dhcp-agent = neutron-dhcp-agent else null;
+    if cfg.enableMetadataAgent == true then service.neutron-metadata-agent = neutron-linuxbridge-agent else null;
+    if cfg.enableL3Agent == true then service.neutron-l3-agent = neutron-l3-agent else null;
 
     networking.firewall.allowedTCPPorts = [
       9696
