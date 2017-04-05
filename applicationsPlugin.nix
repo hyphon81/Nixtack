@@ -27,13 +27,15 @@
 
   openstackclient = callPackage ./openstack/openstackclient.nix {};
 
-  #keystone = callPackage ./openstack/keystone/keystone.nix {};
+  keystone = callPackage ./openstack/keystone/keystone.nix {};
 
-  #glance = callPackage ./openstack/glance/glance.nix {};
+  glance = callPackage ./openstack/glance/glance.nix {};
 
-  #nova = callPackage ./openstack/nova/nova.nix {};
+  nova = callPackage ./openstack/nova/nova.nix {};
 
-  #neutron = callPackage ./openstack/neutron/neutron.nix {};
+  neutron = callPackage ./openstack/neutron/neutron.nix {};
 
-  #horizon = callPackage ./openstack/horizon/horizon.nix {};
+  horizon = callPackage ./openstack/horizon/horizon.nix {};
+
+  ironic = callPackage ./openstack/ironic/ironic.nix {};
 }
