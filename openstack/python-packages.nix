@@ -16,6 +16,8 @@ let
       modpacks.oslo-concurrency
     ];
   };
+
+  sqlite3 = if pkgs.sqlite3 == null then pkgs.sqlite else pkgs.sqlite3;
 in
 
 with python2Packages;
@@ -26,7 +28,7 @@ with python2Packages;
 
     PBR_VERSION = "${version}";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "https://github.com/openstack/oslo.policy/archive/${version}.tar.gz";
       sha256 = "0xn5pk1480ndagph3dw41i1mj4vmlhqayg8zzb45q2jpgzrwyg7n";
     };
@@ -773,7 +775,7 @@ with python2Packages;
 
     PBR_VERSION = "${version}";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "https://github.com/openstack/oslo.log/archive/${version}.tar.gz";
       sha256 = "1npizh25pwz3f55pqg8cx9yz51idq508966c9516gykdxrnwa52h";
     };
@@ -817,7 +819,7 @@ with python2Packages;
 
     PBR_VERSION = "${version}";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "https://github.com/openstack/oslo.middleware/archive/${version}.tar.gz";
       sha256 = "0c6g3fgf2wqfspnlwhwv2vp9mrjldq4h42d3k478zzq5kxfg5d87";
     };
@@ -1031,7 +1033,7 @@ with python2Packages;
 
     disabled = pkgs.lib.versionOlder python.pythonVersion "2.6";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "mirror://pypi/k/kombu/${name}.tar.gz";
       sha256 = "09xpxpjz9nk8d14dj361dqdwyjwda3jlf1a7v6jif9wn2xm37ar2";
     };
@@ -1186,7 +1188,7 @@ with python2Packages;
     name = "fasteners-${version}";
     version = "0.14.1";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "mirror://pypi/f/fasteners/${name}.tar.gz";
       sha256 = "063y20kx01ihbz2mziapmjxi2cd0dq48jzg587xdsdp07xvpcz22";
     };
@@ -1211,7 +1213,7 @@ with python2Packages;
     disabled = isPy33;
     doCheck = !isPyPy; # a test fails
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "mirror://pypi/b/bandit/${name}.tar.gz";
       sha256 = "0qd9kxknac5n5xfl5zjnlmk6jr94krkcx29zgyna8p9lyb828hsk";
     };
@@ -1241,7 +1243,7 @@ with python2Packages;
     version = "1.7.1";
     name = "webob-${version}";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "https://github.com/Pylons/webob/archive/${version}.tar.gz";
       sha256 = "0cj8py0q3n4i3ps74v6rq9wmvfc0mz7xbkj5abysdlra9c88yf9k";
     };
@@ -1558,7 +1560,7 @@ with python2Packages;
     name = "aioeventlet-${version}";
     version = "0.4";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "mirror://pypi/a/aioeventlet/aioeventlet-0.4.tar.gz";
       sha256 = "19krvycaiximchhv1hcfhz81249m3w3jrbp2h4apn1yf4yrc4y7y";
     };
@@ -2728,7 +2730,7 @@ with python2Packages;
     name = "urllib3-${version}";
     version = "1.20";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "https://github.com/shazow/urllib3/archive/${version}.tar.gz";
       sha256 = "19n07zlr0rir39d7143dkwmrkd5cpg4kyjl942m3lipp516gscl2";
     };
@@ -2782,7 +2784,7 @@ with python2Packages;
   elasticsearch = buildPythonPackage rec {
     name = "elasticsearch-1.9.0";
 
-    src = pkgs.fetchurl {
+    src = fetchurl {
       url = "mirror://pypi/e/elasticsearch/${name}.tar.gz";
       sha256 = "091s60ziwhyl9kjfm833i86rcpjx46v9h16jkgjgkk5441dln3gb";
     };

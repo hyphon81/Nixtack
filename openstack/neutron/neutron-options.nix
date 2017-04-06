@@ -420,23 +420,48 @@ in
       in
 
       if cfg.nodeType == "control" then {
-        cfg.enableServer ? true;
-        cfg.enableLinuxbridgeAgent ? true;
-        cfg.enableDhcpAgent ? true;
-        cfg.enableMetadataAgent ? true;
-        cfg.enableL3Agent ? true;
-      } else (if cfg.nodeType == "compute" then {
-        cfg.enableLinuxbridgeAgent ? true;
+        services.neutron-server = neutron-server;
+        services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
+        services.neutron-dhcp-agent = neutron-dhcp-agent;
+        services.neutron-metadata-agent = neutron-metadata-agent;
+        services.neutron-l3-agent = neutron-l3-agent;
+
+      } else (if cfg.nodeType ==  "compute" then {
+        services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
       } else {
         ##UNREACHABLE
       })
-    );
 
-    if cfg.enableServer == true then services.neutron-server = neutroon-server else null;
-    if cfg.enableLinuxbridgeAgent == true then service.neutron-linuxbridge-agent = neutron-linuxbridge-agent else null;
-    if cfg.enableDhcpAgent == true then service.neutron-dhcp-agent = neutron-dhcp-agent else null;
-    if cfg.enableMetadataAgent == true then service.neutron-metadata-agent = neutron-linuxbridge-agent else null;
-    if cfg.enableL3Agent == true then service.neutron-l3-agent = neutron-l3-agent else null;
+      (if cfg.enableServer == true then {
+        services.neutron-server = neutron-server;
+      } else {
+        ##DO NOTHING
+      })
+
+      (if cfg.enableLinuxbridgeAgent == true then {
+        services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
+      } else {
+        ##DO NOTHING
+      })
+
+      (if cfg.enableDhcpAgent == true then {
+        services.neutron-dhcp-agent = neutron-dhcp-agent;
+      } else {
+        ##DO NOTHING
+      })
+
+      (if cfg.enableMetadataAgent == true then {
+        services.neutron-metadata-agent = neutron-linuxbridge-agent;
+      } else {
+        ##DO NOTHING
+      })
+
+      (if cfg.enableL3Agent == true then {
+        services.neutron-l3-agent = neutron-l3-agent;
+      } else {
+        ##DO NOTHING
+      })
+    );
 
     networking.firewall.allowedTCPPorts = [
       9696
