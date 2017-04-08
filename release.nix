@@ -16,7 +16,7 @@ let
 in
 
 rec {
-  config.allowBroken = true;
+  nikpkgs.config.allowBroken = true;
 
   #imports = [ 
   #  # Include OpenStack options plugin file
