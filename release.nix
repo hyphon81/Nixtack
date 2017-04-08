@@ -15,8 +15,8 @@ let
   nixtackApps = pkgs.callPackages ./applicationsPlugin.nix {};
 in
 
-rec {
-  nikpkgs.config.allowBroken = true;
+with config; rec {
+  allowBroken = true;
 
   #imports = [ 
   #  # Include OpenStack options plugin file
