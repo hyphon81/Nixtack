@@ -16,6 +16,8 @@ let
 in
 
 rec {
+  config.allowBroken = true;
+
   #imports = [ 
   #  # Include OpenStack options plugin file
   #  ./optionsPlugin.nix
