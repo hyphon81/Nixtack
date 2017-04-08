@@ -3535,4 +3535,66 @@ with python2Packages;
     ## can't pass test
     doCheck = false;
   };
+
+  ryu = buildPythonPackage rec {
+    name = "ryu-${version}";
+    version = "4.13";
+
+    src = fetchurl {
+      url = "mirror://pypi/r/ryu/ryu-${version}.tar.gz";
+      sha256 = "11glcd5mrd4l2blgxcdkmmi8xnbs63aks63lb1w0453vanibadgr";
+    };
+
+    propagatedBuildInputs = [
+      paramiko
+      lxml
+      modpacks.ncclient
+      sqlalchemy
+
+      modpacks.webob
+      modpacks.oslo-config
+      modpacks.eventlet
+      modpacks.ovs
+      modpacks.tinyrpc
+      msgpack
+      modpacks.routes
+    ];
+  };
+
+  ncclient = buildPythonPackage rec {
+    name = "ncclient-${version}";
+    version = "0.5.3";
+
+    src = fetchurl {
+      url = "mirror://pypi/n/ncclient/ncclient-${version}.tar.gz";
+      sha256 = "0aykgcqdpj5k0qf8z4afxdlxz6qsv7ylp9qxb7sj26szxlb9qszy";
+    };
+
+    propagatedBuildInputs = [
+      paramiko
+      lxml
+      pkgs.libxml2
+      pkgs.libxslt
+    ];
+  };
+
+  ovs = buildPythonPackage rec {
+    name = "ovs-${version}";
+    version = "2.7.0";
+
+    src = fetchurl {
+      url = "mirror://pypi/o/ovs/ovs-${version}.tar.gz";
+      sha256 = "0jlydirj1zvrp8w30nq0vciw1zjqmfx8s97ls3q5pr12059hmg59";
+    };
+  };
+
+  tinyrpc = buildPythonPackage rec {
+    name = "tinyrpc-${version}";
+    version = "0.5";
+
+    src = fetchurl {
+      url = "mirror://pypi/t/tinyrpc/tinyrpc-${version}.tar.gz";
+      sha256 = "07s27177nwzrlgalgwvg14p295flzng8jm9vz2n8lca7lfij72q4";
+    };
+  };
 }

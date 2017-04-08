@@ -55,7 +55,7 @@ buildPythonApplication rec {
     six
     modpacks.stevedore
     modpacks.pecan
-    ryu
+    modpacks.ryu
     #networking-hyperv
     MySQL_python
 
