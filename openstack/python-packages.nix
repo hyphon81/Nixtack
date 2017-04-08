@@ -703,7 +703,7 @@ with python2Packages;
       pika
       modpacks.monotonic
       modpacks.debtcollector
-      amqp
+      modpacks.amqp_1
     ];
 
     buildInputs = [
