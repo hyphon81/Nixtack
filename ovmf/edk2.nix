@@ -53,7 +53,7 @@ edk2 = with pkgs; stdenv.mkDerivation {
             else
             [
               pkgs.sqlite
-              (if builtins.hasAttr "sqlite3" python.modules then
+              (if builtins.hasAttr "modules" python then
                  python.modules.sqlite3
                else
                  null
