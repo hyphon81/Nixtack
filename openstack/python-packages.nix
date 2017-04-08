@@ -17,7 +17,7 @@ let
     ];
   };
 
-  sqlite3 = if builtins.hasAttr "sqlite3" then pkgs.sqlite3 else pkgs.sqlite;
+  sqlite3 = if builtins.hasAttr "sqlite3" pkgs then pkgs.sqlite3 else pkgs.sqlite;
 in
 
 with python2Packages;
