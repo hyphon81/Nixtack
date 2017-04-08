@@ -86,10 +86,10 @@ in
       home = "/var/lib/neutron";
       createHome = true;
       group = "neutron";
-      uid = 106;
+      uid = 260;
     };
 
-    users.extraGroups.neutron.gid = 106;
+    users.extraGroups.neutron.gid = 260;
 
     # Enable sudo
     security.sudo = {
@@ -102,152 +102,152 @@ in
     environment.etc."neutron/api-paste.ini" = {
       enable = true;
       source = ./etc/api-paste.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/dnsmasq" = {
       enable = true;
       source = ./etc/dnsmasq;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/dhcp_agent.ini" = {
       enable = true;
       source = ./etc/dhcp_agent.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/l3_agent.ini" = {
       enable = true;
       source = ./etc/l3_agent.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/metadata_agent.ini" = {
       enable = true;
       source = ./etc/metadata_agent.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/metering_agent.ini" = {
       enable = true;
       source = ./etc/metering_agent.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/neutron.conf" = {
       enable = true;
       source = ./etc/neutron.conf;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/policy.json" = {
       enable = true;
       source = ./etc/policy.json;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/rootwrap.conf" = {
       enable = true;
       source = ./etc/rootwrap.conf;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/linuxbridge_agent.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/linuxbridge_agent.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/ml2_conf.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/ml2_conf.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/ml2_conf_brocade.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/ml2_conf_brocade.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/ml2_conf_brocade_fi_ni.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/ml2_conf_brocade_fi_ni.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/ml2_conf_fslsdn.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/ml2_conf_brocade_fi_ni.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/ml2_conf_ofa.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/ml2_conf_ofa.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/ml2_conf_sriov.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/ml2_conf_sriov.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/openvswitch_agent.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/openvswitch_agent.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/restproxy.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/restproxy.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 
     environment.etc."neutron/plugins/ml2/sriov_agent.ini" = {
       enable = true;
       source = ./etc/plugins/ml2/sriov_agent.ini;
-      uid = 106;
-      gid = 106;
+      uid = 260;
+      gid = 260;
       mode = "0440";
     };
 

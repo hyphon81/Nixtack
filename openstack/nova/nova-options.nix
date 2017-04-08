@@ -46,10 +46,10 @@ in
       createHome = true;
       group = "nova";
       extraGroups = [ "libvirtd" ];
-      uid = 208;
+      uid = 261;
     };
 
-    users.extraGroups.nova.gid = 208;
+    users.extraGroups.nova.gid = 261;
 
     # Enable sudo
     security.sudo = {
@@ -62,64 +62,64 @@ in
     environment.etc."nova/api-paste.ini" = {
       enable = true;
       source = ./etc/api-paste.ini;
-      uid = 208;
-      gid = 208;
+      uid = 261;
+      gid = 261;
       mode = "0440";
     };
 
     environment.etc."nova/logging.conf" = {
       enable = true;
       source = ./etc/logging.conf;
-      uid = 208;
-      gid = 208;
+      uid = 261;
+      gid = 261;
       mode = "0440";
     };
 
     environment.etc."nova/nova-compute.conf" = {
       enable = true;
       source = ./etc/nova-compute.conf;
-      uid = 208;
-      gid = 208;
+      uid = 261;
+      gid = 261;
       mode = "0440";
     };
 
     environment.etc."nova/nova.conf" = {
       enable = true;
       source = ./etc/nova.conf;
-      uid = 208;
-      gid = 208;
+      uid = 261;
+      gid = 261;
       mode = "0440";
     };
 
     environment.etc."nova/policy.json" = {
       enable = true;
       source = ./etc/policy.json;
-      uid = 208;
-      gid = 208;
+      uid = 261;
+      gid = 261;
       mode = "0440";
     };
 
     environment.etc."nova/rootwrap.conf" = {
       enable = true;
       source = ./etc/rootwrap.conf;
-      uid = 208;
-      gid = 208;
+      uid = 0;
+      gid = 0;
       mode = "0440";
     };
 
     environment.etc."nova/rootwrap.d/api-metadata.filters" = {
       enable = true;
       source = ./etc/rootwrap.d/api-metadata.filters;
-      uid = 208;
-      gid = 208;
+      uid = 0;
+      gid = 0;
       mode = "0440";
     };
 
     environment.etc."nova/rootwrap.d/compute.filters" = {
       enable = true;
       source = ./etc/rootwrap.d/compute.filters;
-      uid = 208;
-      gid = 208;
+      uid = 0;
+      gid = 0;
       mode = "0440";
     };
 

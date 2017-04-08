@@ -46,10 +46,10 @@ in
       createHome = true;
       group = "ironic";
       extraGroups = [ "nginx" ];
-      uid = 629;
+      uid = 131;
     };
 
-    users.extraGroups.ironic.gid = 629;
+    users.extraGroups.ironic.gid = 131;
 
     # Enable sudo
     security.sudo = {
@@ -62,24 +62,24 @@ in
     environment.etc."ironic/ironic.conf" = {
       enable = true;
       source = ./etc/ironic.conf;
-      uid = 629;
-      gid = 629;
+      uid = 131;
+      gid = 131;
       mode = "0440";
     };
 
     environment.etc."ironic/ironic_api_audit_map.conf" = {
       enable = true;
       source = ./etc/ironic_api_audit_map.conf;
-      uid = 629;
-      gid = 629;
+      uid = 131;
+      gid = 131;
       mode = "0440";
     };
 
     environment.etc."ironic/policy.json" = {
       enable = true;
       source = ./etc/policy.json;
-      uid = 629;
-      gid = 629;
+      uid = 131;
+      gid = 131;
       mode = "0440";
     };
 

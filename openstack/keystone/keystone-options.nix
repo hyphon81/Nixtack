@@ -68,15 +68,15 @@ in
       description = "OpenStack Identify Service user";
       group = "keystone";
       extraGroups = [ "nginx" ];
-      uid = 91;
+      uid = 259;
     };
 
-    users.extraGroups.keystone.gid = 91;
+    users.extraGroups.keystone.gid = 259;
 
     environment.etc."keystone/keystone.conf" = {
       enable = true;
-      uid = 91;
-      gid = 91;
+      uid = 259;
+      gid = 259;
       mode = "0640";
       text = ''
         [DEFAULT]
@@ -169,8 +169,8 @@ in
     };
     environment.etc."keystone/keystone-paste.ini" = {
       enable = true;
-      uid = 91;
-      gid = 91;
+      uid = 259;
+      gid = 259;
       mode = "0640";
       text = ''
         # Keystone PasteDeploy configuration file.
@@ -272,8 +272,8 @@ in
 
     environment.etc."keystone/logging.conf" = {
       enable = true;
-      uid = 91;
-      gid = 91;
+      uid = 259;
+      gid = 259;
       mode = "0640";
       text = ''
         [loggers]
@@ -346,8 +346,8 @@ in
 
     environment.etc."keystone/policy.json" = {
       enable = true;
-      uid = 91;
-      gid = 91;
+      uid = 259;
+      gid = 259;
       mode = "0640";
       text = ''
         {
@@ -554,8 +554,8 @@ in
     environment.etc."keystone/sso_callback_template.html" = {
       enable = true;
       source = ./etc/sso_callback_template.html;
-      uid = 91;
-      gid = 91;
+      uid = 259;
+      gid = 259;
       mode = "0640";
     };
 
