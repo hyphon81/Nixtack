@@ -17,7 +17,7 @@ let
     ];
   };
 
-  sqlite3 = if pkgs.sqlite3 == null then pkgs.sqlite else pkgs.sqlite3;
+  sqlite3 = if builtins.hasAttr "sqlite3" then pkgs.sqlite3 else pkgs.sqlite;
 in
 
 with python2Packages;
@@ -3016,6 +3016,7 @@ with python2Packages;
       pathlib
       pyscss
       pillow
+      pysqlite
       sqlite3
     ];
   };
