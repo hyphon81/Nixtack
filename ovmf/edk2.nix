@@ -48,7 +48,10 @@ edk2 = with pkgs; stdenv.mkDerivation {
 
       nativeBuildInputs = [
         (python.buildEnv.override {
-          extraLibs = [ pythonPackages.sqlite3 python.modules.sqlite3 ];
+          extraLibs = if builtins.hasAttr "sqlite3" pkgs then
+            [ pythonPackages.sqlite3 python.modules.sqlite3 ]
+            else
+            [ pkgs.sqlite python.modules.sqlite3 ];
         })
         wget
         cacert
