@@ -51,7 +51,14 @@ edk2 = with pkgs; stdenv.mkDerivation {
           extraLibs = if builtins.hasAttr "sqlite3" pkgs then
             [ pythonPackages.sqlite3 python.modules.sqlite3 ]
             else
-            [ pkgs.sqlite python.modules.sqlite3 ];
+            [
+              pkgs.sqlite
+              (if builtins.hasAttr "sqlite3" python.modules then
+                 python.modules.sqlite3
+               else
+                 null
+              )
+            ];
         })
         wget
         cacert
