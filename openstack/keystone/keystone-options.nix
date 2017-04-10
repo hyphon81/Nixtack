@@ -11,7 +11,7 @@ with import ../../uwsgi/uwsgi-options.nix {
 let
   cfg = config.keystone-options;
   keystone = pkgs.callPackage ./keystone.nix {};
-  openstackclient = pkgs.callPackage ../openstackclient.nix
+  openstackclient = pkgs.callPackage ../openstackclient.nix {};
 in
 
 {
