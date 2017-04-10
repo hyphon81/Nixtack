@@ -6,7 +6,7 @@
 
 let
   # Include applicetions plugin file
-  nixtackApps = pkgs.callPackages /path/to/applicationsPlugin.nix {};
+  #nixtackApps = pkgs.callPackages /path/to/applicationsPlugin.nix {};
 in
 
 {
@@ -146,14 +146,25 @@ in
   };
 
   # Enable glance
-  glance-options.enable = true;
+  glance-options = {
+    enable = true;
+    projectDomainName = "Default";
+    userDomainName = "Default";
+    projectName = "service";
+    serviceUser = "glance";
+    servicePassword = "glance_password";
+    databaseUser = "glance";
+    databasePassword = "glance_db_password";
+    databaseName = "glance";
+    databaseServer = "localhost";
+  };
 
   # Enable keystone
   # (If keystone is enable, there run nginx and uwsgi.)
   keystone-options = {
     enable = true;
     databaseUser = "keystone";
-    databasePassword = "keystone_password";
+    databasePassword = "keystone_db_password";
     databaseName = "keystone";
     databaseServer = "localhost";
   };
@@ -193,16 +204,27 @@ in
   '';
 
   # Create initial databases
-  #services.mysql.initialDatabases = [
-  #  # Create keystone database
-  #  {
-  #    name = "keystone";
-  #    schema = writeText "keystone.sql" ''
-  #      GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '${keystone-options.databasePassword}'
-  #      GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY '${keystone-options.databasePassword}'
-  #    '';
-  #  }
-  #];
+  services.mysql.initialDatabases = [
+    # Create keystone database
+    # (If database server is localhost, then it will be run.)
+    {
+      name = "${keystone-options.databaseName}";
+      schema = writeText "keystone.sql" ''
+        GRANT ALL PRIVILEGES ON ${keystone-options.databaseName}.* TO '${keystone-options.databaseUser}'@'localhost' IDENTIFIED BY '${keystone-options.databasePassword}'
+        GRANT ALL PRIVILEGES ON ${keystone-options.databaseName}.* TO '${keystone-options.databaseUser}'@'localhost' IDENTIFIED BY '${keystone-options.databasePassword}'
+      '';
+    }
+
+    # Create glance database
+    # (If database server is localhost, then it will be run.)
+    {
+      name = "${glance-options.databaseName}";
+      schema = writeText "glance.sql" ''
+        GRANT ALL PRIVILEGES ON ${glance-options.databaseName}.* TO '${glance-options.databaseUser}'@'localhost' IDENTIFIED BY '${glance-options.databasePassword}'
+        GRANT ALL PRIVILEGES ON ${glance-options.databaseName}.* TO '${glance-options.databaseUser}'@'localhost' IDENTIFIED BY '${glance-options.databasePassword}'
+      '';
+    }
+  ];
 
   # Enable rabbitmq
   # (This code's assume the system using rabbitmq.

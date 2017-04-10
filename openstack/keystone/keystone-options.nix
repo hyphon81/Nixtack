@@ -11,6 +11,7 @@ with import ../../uwsgi/uwsgi-options.nix {
 let
   cfg = config.keystone-options;
   keystone = pkgs.callPackage ./keystone.nix {};
+  openstackclient = pkgs.callPackage ../openstackclient.nix
 in
 
 {
@@ -62,6 +63,8 @@ in
     # Install keystone
     environment.systemPackages = [
       keystone
+
+      openstackclient
     ];
 
     users.extraUsers.keystone = {
@@ -562,7 +565,6 @@ in
     networking.firewall.allowedTCPPorts = [
       5000
       35357
-      8000
     ];
 
     # Enable nginx
