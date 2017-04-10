@@ -624,7 +624,7 @@ in
       ];
 
       serviceConfig = {
-        ExecStart = "${glance}/bin/glance-api --config-dir /etc/glance --config-file /etc/glance/glance-api-paste.ini";
+        ExecStart = "${glance}/bin/glance-api --config-file /etc/glance/glance-api.conf --config-file /etc/glance/glance-api-paste.ini";
         User = "glance";
         Group = "glance";
       };
@@ -639,13 +639,14 @@ in
       ];
 
       serviceConfig = {
-        ExecStart = "${glance}/bin/glance-registry --config-dir /etc/glance --config-file /etc/glance/glance-registry-paste.ini";
+        ExecStart = "${glance}/bin/glance-registry --config-file /etc/glance/glance-registry.conf --config-file /etc/glance/glance-registry-paste.ini";
         User = "glance";
         Group = "glance";
       };
     };
 
     networking.firewall.allowedTCPPorts = [
+      9191
       9292
     ];
   };
