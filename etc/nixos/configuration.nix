@@ -143,6 +143,39 @@ in
   nova-options = {
     enable = true;
     nodeType = "control";
+    extraConfig = ''
+      # Set keymap
+      vnc_keymap = ja
+      # PCI passthrough whitelist
+      pci_passthrough_whitelist=[{ "vendor_id":"10de", "product_id":"1380"}, { "vendor_id":"10de", "product_id":"0fbc"}]
+      # PCI alias
+      pci_alias={"vendor_id":"10de", "product_id":"1380", "name":"GTX750Ti"}
+      pci_alias={"vendor_id":"10de", "product_id":"0fbc", "name":"GTX750Ti-sound"}
+    '';
+    rabbitMQUser = "openstack";
+    rabbitMQPassword = "openstack_password";
+    rabbitMQServer = "localhost";
+    myIp = "192.168.0.10";
+    projectDomainName = "Default";
+    userDomainName = "Default";
+    projectName = "service";
+    serviceUser = "nova";
+    servicePassword = "nova";
+    regionType = "RegionOne";
+    neutronProjectName = "service";
+    neutronServiceUser = "neutron";
+    neutronServicePassword = "neutron_password";
+    databaseUser = "nova";
+    databasePassword = "nova_db_password";
+    novaDatabaseName = "nova";
+    novaApiDatabaseName = "nova-api";
+    databaseServer = "localhost";
+    keystoneServer = "localhost";
+    glanceServer = "localhost";
+    neutronServer = "localhost";
+    memcachedServer = "localhost";
+    sharedSecret = "SHAREDSECRET";
+    vncFrontend = "localhost";
   };
 
   # Enable glance
