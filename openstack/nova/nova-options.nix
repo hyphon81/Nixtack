@@ -175,7 +175,7 @@ in
 
       novaApiDatabaseName = mkOption {
         type = types.str;
-        default = "nova-api";
+        default = "nova_api";
         description = ''
           This is the name of the nova-api database.
         '';

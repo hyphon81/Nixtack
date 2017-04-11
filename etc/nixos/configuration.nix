@@ -168,7 +168,7 @@ in
     databaseUser = "nova";
     databasePassword = "nova_db_password";
     novaDatabaseName = "nova";
-    novaApiDatabaseName = "nova-api";
+    novaApiDatabaseName = "nova_api";
     databaseServer = "localhost";
     keystoneServer = "localhost";
     glanceServer = "localhost";
