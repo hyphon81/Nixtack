@@ -1468,6 +1468,7 @@ in
           script = ''
             PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
             PYTHONIOENCODING="utf-8"
+            chmod 0755 /var/lib/nova
             ${nova}/bin/nova-compute
           '';
 
