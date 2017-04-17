@@ -1485,8 +1485,12 @@ in
             "systemd-udev-settle.service"
           ];
 
+          script = ''
+            chmod 0755 /var/lib/nova
+            ${nova}/bin/nova-conductor
+          '';
+
           serviceConfig = {
-            ExecStart = "${nova}/bin/nova-conductor";
             User = "nova";
             Group = "nova";
           };
