@@ -785,8 +785,8 @@ in
         [Filters]
         ip_exec: IpNetnsExecFilter, ip, root
         dnsmasq: CommandFilter, dnsmasq, root
-        kill_dnsmasq: KillFilter, root, /nix/store/7w9fsfp1n7a6j6s65175kxpvkhj9jg04-dnsmasq-2.76/bin/dnsmasq, -9, -HUP
-        kill_dnsmasq_usr: KillFilter, root, /usr/nix/store/7w9fsfp1n7a6j6s65175kxpvkhj9jg04-dnsmasq-2.76/bin/dnsmasq, -9, -HUP
+        kill_dnsmasq: KillFilter, root, ${pkgs.dnsmasq}/bin/dnsmasq, -9, -HUP
+        kill_dnsmasq_usr: KillFilter, root, ${pkgs.dnsmasq}/bin/dnsmasq, -9, -HUP
 
         ovs-vsctl: CommandFilter, ovs-vsctl, root
         ivs-ctl: CommandFilter, ivs-ctl, root
@@ -899,14 +899,6 @@ in
       '';
     };
 
-    #environment.etc."neutron/rootwrap.d/openvswitch-plugin.filters" = {
-    #  enable = true;
-    #  source = ./etc/rootwrap.d/openvswitch-plugin.filters;
-    #  uid = 0;
-    #  gid = 0;
-    #  mode = "0440";
-    #};
-
     systemd = (
       let
         neutron-server = {
@@ -918,7 +910,7 @@ in
           ];
 
           serviceConfig = {
-            ExecStart = "${neutron}/bin/neutron-server --config-dir /etc/neutron --config-file /etc/neutron/plugins/ml2/ml2_conf.ini --debug";
+            ExecStart = "${neutron}/bin/neutron-server --config-dir /etc/neutron --config-file /etc/neutron/plugins/ml2/ml2_conf.ini";
             User = "neutron";
             Group = "neutron";
           };
