@@ -21,7 +21,7 @@ in
       };
 
       nodeType = mkOption {
-        type = types.enum ["control" "compute"];
+        type = types.enum ["control" "compute" "custom"];
         default = "control";
         description = ''
           OpenStack Compute Service node type.
@@ -137,7 +137,7 @@ in
         type = types.str;
         default = "nova";
         description = ''
-          This is the name of the neutronservice user.
+          This is the name of the neutron service user.
         '';
       };
 
@@ -242,6 +242,7 @@ in
         default = null;
         description = ''
           This option enables nova-api daemon.
+          This option needs to set nova-options.nodeType = "custom".
         '';
       };
 
@@ -250,6 +251,7 @@ in
         default = null;
         description = ''
           This option enables nova-compute daemon.
+          This option needs to set nova-options.nodeType = "custom"..
         '';
       };
 
@@ -258,6 +260,7 @@ in
         default = null;
         description = ''
           This option enables nova-conductor daemon.
+          This option needs to set nova-options.nodeType = "custom".
         '';
       };
 
@@ -266,6 +269,7 @@ in
         default = null;
         description = ''
           This option enables nova-consoleauth daemon.
+          This option needs to set nova-options.nodeType = "custom".
         '';
       };
 
@@ -274,6 +278,7 @@ in
         default = null;
         description = ''
           This option enables nova-novncproxy daemon.
+          This option needs to set nova-options.nodeType = "custom".
         '';
       };
 
@@ -282,6 +287,7 @@ in
         default = null;
         description = ''
           This option enables nova-scheduler daemon.
+          This option needs to set nova-options.nodeType = "custom".
         '';
       };
     };
@@ -1540,48 +1546,47 @@ in
         services.nova-novncproxy = nova-novncproxy;
         services.nova-scheduler = nova-scheduler;
 
-      } else (if cfg.nodeType == "compute" then {
+      } else if cfg.nodeType == "compute" then {
         services.nova-compute = nova-compute;
+      } else if cfg.nodeType == "custom" then (
+        (if cfg.enableApi == true then {
+          services.nova-api = nova-api;
+        } else {
+          ##DO NOTHING
+        })
 
-      } else {
+        (if cfg.enableCompute == true then {
+          services.nova-compute = nova-compute;
+        } else {
+          ##DO NOTHING
+        })
+
+        (if cfg.enableConductor == true then {
+          services.nova-api = nova-conductor;
+        } else {
+          ##DO NOTHING
+        })
+
+        (if cfg.enableConsoleauth == true then {
+          services.nova-api = nova-consoleauth;
+        } else {
+          ##DO NOTHING
+        })
+
+        (if cfg.enableNovncproxy == true then {
+          services.nova-novncproxy = nova-novncproxy;
+        } else {
+          ##DO NOTHING
+        })
+
+        (if cfg.enableScheduler == true then {
+          services.nova-scheduler = nova-scheduler;
+        } else {
+          ##DO NOTHING
+        })
+      ) else {
         ##DON'T RUN
-      })
-
-      (if cfg.enableApi == true then {
-        services.nova-api = nova-api;
-      } else {
-        ##DO NOTHING
-      })
-
-      (if cfg.enableCompute == true then {
-        services.nova-compute = nova-compute;
-      } else {
-        ##DO NOTHING
-      })
-
-      (if cfg.enableConductor == true then {
-        services.nova-api = nova-conductor;
-      } else {
-        ##DO NOTHING
-      })
-
-      (if cfg.enableConsoleauth == true then {
-        services.nova-api = nova-consoleauth;
-      } else {
-        ##DO NOTHING
-      })
-
-      (if cfg.enableNovncproxy == true then {
-        services.nova-novncproxy = nova-novncproxy;
-      } else {
-        ##DO NOTHING
-      })
-
-      (if cfg.enableScheduler == true then {
-        services.nova-scheduler = nova-scheduler;
-      } else {
-        ##DO NOTHING
-      })
+      }
     );
 
     networking.firewall.allowedTCPPorts = [

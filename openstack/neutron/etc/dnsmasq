@@ -1,5 +1,0 @@
-user=neutron
-group=neutron
-
-log-dhcp
-log-queries
