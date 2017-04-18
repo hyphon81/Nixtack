@@ -204,7 +204,7 @@ in
         '';
       };
 
-      flatNetworks = = mkOption {
+      flatNetworks = mkOption {
         type = types.listOf types.str;
         default = [ ];
         example = [ "provider" "physical_lan" ];
