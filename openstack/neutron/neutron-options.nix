@@ -198,9 +198,18 @@ in
       physicalInterfaceMappings = mkOption {
         type = types.listOf types.str;
         default = [ ];
-        example = [ "provider:eth0" ];
+        example = [ "provider:eth0" "physicallan:eth1" ];
         description = ''
           The name of the underlying provider physical network interface.
+        '';
+      };
+
+      flatNetworks = = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+        example = [ "provider" "physical_lan" ];
+        description = ''
+          The name of the physical flat network.
         '';
       };
 
@@ -735,7 +744,7 @@ in
         extension_drivers = port_security
 
         [ml2_type_flat]
-        flat_networks = provider
+        flat_networks = ${concatStringsSep ", " cfg.flatNetworks}
 
         [ml2_type_vlan]
 
