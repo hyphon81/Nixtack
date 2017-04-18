@@ -515,6 +515,7 @@ in
         compute_driver=libvirt.LibvirtDriver
         [libvirt]
         virt_type=kvm
+        cpu_mode=host-passthrough
       '';
     };
 
@@ -558,9 +559,6 @@ in
         [api_database]
         connection = mysql+pymysql://${cfg.databaseUser}:${cfg.databasePassword}@${cfg.databaseServer}/${cfg.novaApiDatabaseName}
 
-        [oslo_concurrency]
-        lock_path = /var/lock/nova
-
         [libvirt]
         use_virtio_for_bridges = True
 
@@ -568,7 +566,7 @@ in
         api_paste_config=/etc/nova/api-paste.ini
 
         [vnc]
-        vncserver_listen = $my_ip
+        vncserver_listen = 0.0.0.0
         vncserver_proxyclient_address = $my_ip
 
         enabled = True
@@ -1596,6 +1594,7 @@ in
 
     networking.firewall.allowedTCPPorts = [
       8774
+      8775
       6080
     ];
   };
