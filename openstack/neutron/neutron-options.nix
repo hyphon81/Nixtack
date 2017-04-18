@@ -928,6 +928,7 @@ in
             PATH="/var/setuid-wrappers:/run/current-system/sw/bin:$PATH"
             PYTHONPATH="${neutron}/lib/${pkgs.python.libPrefix}/site-packages:$PYTHONPATH"
             PYTHONIOENCODING="utf-8"
+            chmod 0755 /var/lib/neutron
             ${neutron}/bin/neutron-linuxbridge-agent --config-dir /etc/neutron --config-file /etc/neutron/plugins/ml2/linuxbridge_agent.ini
           '';
 
