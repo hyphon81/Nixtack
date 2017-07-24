@@ -1016,37 +1016,27 @@ in
 
       } else if cfg.nodeType == "compute" then {
         services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
-      } else if cfg.nodeType == "custom" then (
-        (if cfg.enableServer == true then {
-          services.neutron-server = neutron-server;
-        } else {
-          ##DO NOTHING
-        })
+      } else if cfg.nodeType == "custom" then {
+        services.neutron-server = if cfg.enableServer == true then (
+          neutron-server
+        ) else {};
 
-        (if cfg.enableLinuxbridgeAgent == true then {
-          services.neutron-linuxbridge-agent = neutron-linuxbridge-agent;
-        } else {
-          ##DO NOTHING
-        })
+        services.neutron-linuxbridge-agent =  if cfg.enableLinuxbridgeAgent == true then (
+          neutron-linuxbridge-agent
+        ) else {};
 
-        (if cfg.enableDhcpAgent == true then {
-          services.neutron-dhcp-agent = neutron-dhcp-agent;
-        } else {
-          ##DO NOTHING
-        })
+        services.neutron-dhcp-agent = if cfg.enableDhcpAgent == true then (
+          neutron-dhcp-agent
+        ) else {};
 
-        (if cfg.enableMetadataAgent == true then {
-          services.neutron-metadata-agent = neutron-linuxbridge-agent;
-        } else {
-          ##DO NOTHING
-        })
+        services.neutron-metadata-agent = if cfg.enableMetadataAgent == true then (
+          neutron-metadata-agent
+        ) else {};
 
-        (if cfg.enableL3Agent == true then {
-          services.neutron-l3-agent = neutron-l3-agent;
-        } else {
-          ##DO NOTHING
-        })
-      ) else {
+        services.neutron-l3-agent = if cfg.enableL3Agent == true then (
+          neutron-l3-agent
+        ) else {};
+      } else {
         ##UNREACHABLE
       }
     );
