@@ -18,7 +18,7 @@ let
   };
 
   sqlite3 = if builtins.hasAttr "sqlite3" pkgs then pkgs.sqlite3 else pkgs.sqlite;
-  requests2 = if builtins.hasAttr "requests2" pkgs then pkgs.python2Packages.requests2 else pkgs.python2Packagesrequests;
+  requests2 = if builtins.hasAttr "requests2" pkgs then pkgs.python2Packages.requests2 else pkgs.python2Packages.requests;
 in
 
 with python2Packages;
