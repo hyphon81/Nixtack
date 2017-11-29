@@ -4213,7 +4213,7 @@ with python2Packages;
     ];
     propagatedBuildInputs = [
       modpacks.idna
-      asn1crypto
+      modpacks.asn1crypto
       pyasn1
       packaging
       six
@@ -4421,6 +4421,20 @@ with python2Packages;
       zope_interface
       modpacks.sphinx
     ];
+  };
+
+  asn1crypto = buildPythonPackage rec {
+    pname = "asn1crypto";
+    version = "0.23.0";
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "0874981329cfebb366d6584c3d16e913f2a0eb026c9463efcc4aaf42a9d94d70";
+    };
+
+    # No tests included
+    doCheck = false;
   };
 
 }
