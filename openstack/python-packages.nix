@@ -2305,7 +2305,7 @@ with python2Packages;
       nose
       modpacks.webtest
       modpacks.pecan
-      transaction
+      modpacks.transaction
       cherrypy
       modpacks.sphinx
     ];
@@ -3063,6 +3063,9 @@ with python2Packages;
       pysqlite
       sqlite3
     ];
+
+    doCheck = false;
+
   };
 
   heatclient = buildPythonPackage rec {
@@ -3648,8 +3651,16 @@ with python2Packages;
     };
     LC_ALL = "en_US.UTF-8";
 
-    checkInputs = [ pytest ];
-    buildInputs = [ simplejson modpacks.mock pkgs.glibcLocales html5lib enum34 ];
+    checkInputs = [
+      pytest
+    ];
+    buildInputs = [
+      simplejson
+      modpacks.mock
+      pkgs.glibcLocales
+      html5lib
+      enum34
+    ];
     # Disable two tests that require network access.
     checkPhase = ''
       cd tests; ${python.interpreter} run.py --ignore py35 -k 'not test_defaults and not test_anchors_ignored'
@@ -4380,6 +4391,22 @@ with python2Packages;
     buildPhase = "${python.interpreter} setup.py build";
 
     installPhase = "${python.interpreter} setup.py install --prefix=$out";
+  };
+
+  transaction = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "transaction";
+    version = "2.1.2";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "1mab0r3grmgz9d97y8pynhg0r34v0am35vpxyvh7ff5sgmg3dg5r";
+    };
+
+    propagatedBuildInputs = [
+      zope_interface
+      modpacks.mock
+    ];
   };
 
 }
