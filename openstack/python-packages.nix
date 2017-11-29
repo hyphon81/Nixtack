@@ -19,6 +19,24 @@ let
 
   sqlite3 = if builtins.hasAttr "sqlite3" pkgs then pkgs.sqlite3 else pkgs.sqlite;
   mod-libvirt = callPackage ../libvirt/libvirt.nix {};
+
+  fetchPypi = makeOverridable( {format ? "setuptools", ... } @attrs:
+    let
+      fetchWheel = {pname, version, sha256, python ? "py2.py3", abi ? "none", platform ? "any"}:
+      # Fetch a wheel. By default we fetch an universal wheel.
+      # See https://www.python.org/dev/peps/pep-0427/#file-name-convention for details regarding the optional arguments.
+        let
+          url = "https://files.pythonhosted.org/packages/${python}/${builtins.substring 0 1 pname}/${pname}/${pname}-${version}-${python}-${abi}-${platform}.whl";
+        in pkgs.fetchurl {inherit url sha256;};
+      fetchSource = {pname, version, sha256, extension ? "tar.gz"}:
+      # Fetch a source tarball.
+        let
+          url = "mirror://pypi/${builtins.substring 0 1 pname}/${pname}/${pname}-${version}.${extension}";
+        in pkgs.fetchurl {inherit url sha256;};
+      fetcher = (if format == "wheel" then fetchWheel
+        else if format == "setuptools" then fetchSource
+        else throw "Unsupported kind ${kind}");
+    in fetcher (builtins.removeAttrs attrs ["format"]) );
 in
 
 with python2Packages;
@@ -1501,7 +1519,7 @@ with python2Packages;
       zope_interface
       dateutil
       modpacks.requests
-      pyasn1
+      modpacks.pyasn1
       modpacks.webob
       decorator
       pycparser
@@ -4214,7 +4232,7 @@ with python2Packages;
     propagatedBuildInputs = [
       modpacks.idna
       modpacks.asn1crypto
-      pyasn1
+      modpacks.pyasn1
       packaging
       six
       enum34
@@ -4294,7 +4312,7 @@ with python2Packages;
     ];
     propagatedBuildInputs = [
       modpacks.cryptography
-      pyasn1
+      modpacks.pyasn1
       modpacks.idna
     ];
   };
@@ -4361,7 +4379,7 @@ with python2Packages;
 
     propagatedBuildInputs = [
       modpacks.cryptography
-      pyasn1
+      modpacks.pyasn1
     ];
 
     checkPhase = ''
@@ -4450,6 +4468,17 @@ with python2Packages;
     propagatedBuildInputs = [ six ];
 
     doCheck = false;
+  };
+
+  pyasn1 = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "pyasn1";
+    version = "0.4.2";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "05bxnr4wmrg62m4qr1pg1p3z7bhwrv74jll3k42pgxwl36kv0n6j";
+    };
   };
 
 }

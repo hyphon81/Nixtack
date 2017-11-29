@@ -23,7 +23,7 @@ buildPythonApplication rec {
 
   src = fetchurl {
     url = "https://github.com/openstack/horizon/archive/${version}.tar.gz";
-    sha256 = "06y1dysx11axff278h0809jl54fliws75qs56d8lcwb3hrprbgih";
+    sha256 = "06ahbnzpc1ff7l0096z8i6hh0iqdlvixipqiayshk01xwlz3b0bn";
   };
 
   patchPhase = ''
