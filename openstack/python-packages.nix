@@ -4000,7 +4000,7 @@ with python2Packages;
       pytestrunner
       mccabe
       configparser
-      backports_functools_lru_cache
+      modpacks.backports_functools_lru_cache
     ];
 
     propagatedBuildInputs = [
@@ -4060,7 +4060,7 @@ with python2Packages;
       wrapt
       enum34
       singledispatch
-      backports_functools_lru_cache
+      modpacks.backports_functools_lru_cache
     ];
 
     postPatch = ''
@@ -4500,6 +4500,19 @@ with python2Packages;
     buildInputs = [ hypothesis setuptools_scm ];
     propagatedBuildInputs = [ py ]
       ++ (stdenv.lib.optional isPy26 argparse);
+  };
+
+  backports_functools_lru_cache = buildPythonPackage rec {
+    name = "backports.functools_lru_cache-${version}";
+    version = "1.3";
+
+    src = fetchurl {
+      url = "mirror://pypi/b/backports_functools_lru_cache/${name}.tar.gz";
+      sha256 = "444a21bcec4ae177da554321f81a78dc879eaa8f6ea9920cb904830585d31e95";
+    };
+
+    buildInputs = [ setuptools_scm ];
+    doCheck = false; # No proper test
   };
 
 }
