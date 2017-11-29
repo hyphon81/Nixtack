@@ -2347,7 +2347,7 @@ with python2Packages;
     propagatedBuildInputs = [
       PasteDeploy
       repoze_lru
-      repoze_sphinx_autointerface
+      modpacks.repoze_sphinx_autointerface
       translationstring
       venusian
       modpacks.webob
@@ -4406,6 +4406,20 @@ with python2Packages;
     propagatedBuildInputs = [
       zope_interface
       modpacks.mock
+    ];
+  };
+
+  repoze_sphinx_autointerface = buildPythonPackage rec {
+    name = "repoze.sphinx.autointerface-0.7.1";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/r/repoze.sphinx.autointerface/${name}.tar.gz";
+      sha256 = "97ef5fac0ab0a96f1578017f04aea448651fa9f063fc43393a8253bff8d8d504";
+    };
+
+    propagatedBuildInputs = [
+      zope_interface
+      modpacks.sphinx
     ];
   };
 

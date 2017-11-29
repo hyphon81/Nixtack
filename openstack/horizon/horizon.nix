@@ -144,7 +144,9 @@ buildPythonApplication rec {
     ${python.interpreter} setup.py install --prefix=$out
     
     # make wsgi files
-    ${python.interpreter} manage.py make_web_conf --wsgi --pythonpath $PYTHONPATH
+    #${python.interpreter} manage.py make_web_conf --wsgi --pythonpath $PYTHONPATH
+    ${python.interpreter} manage.py make_web_conf --wsgi
+
     mkdir -p $out/bin
     cp openstack_dashboard/wsgi/horizon.wsgi $out/bin/horizon.wsgi
     chmod +x $out/bin/horizon.wsgi
