@@ -36,7 +36,7 @@ let
         in pkgs.fetchurl {inherit url sha256;};
       fetcher = (if format == "wheel" then fetchWheel
         else if format == "setuptools" then fetchSource
-        else throw "Unsupported kind ${kind}");
+        else throw "Unsupported kind");
     in fetcher (builtins.removeAttrs attrs ["format"]) );
 in
 
