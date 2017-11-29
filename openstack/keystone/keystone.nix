@@ -32,23 +32,23 @@ buildPythonApplication rec {
 
   propagatedBuildInputs = [
     Babel
-    pbr
+    modpacks.pbr
     modpacks.webob
     modpacks.eventlet
     greenlet
     PasteDeploy
     paste
     modpacks.routes
-    cryptography
+    modpacks.cryptography
     six
-    sqlalchemy
+    modpacks.sqlalchemy
     modpacks.sqlalchemy_migrate
     modpacks.stevedore
     passlib
     modpacks.keystoneclient
     memcached
     modpacks.keystonemiddleware
-    oauthlib
+    modpacks.oauthlib
     modpacks.pysaml2
     modpacks.dogpile_cache
     jsonschema
@@ -81,16 +81,16 @@ buildPythonApplication rec {
 
   buildInputs = [
     coverage
-    fixtures
-    mock
-    subunit
+    modpacks.fixtures
+    modpacks.mock
+    modpacks.subunit
     modpacks.tempest-lib
-    testtools
-    testrepository
+    modpacks.testtools
+    modpacks.testrepository
     ldap
     ldappool
     modpacks.webtest
-    requests2
+    modpacks.requests
     modpacks.oslotest
     pep8
     pymongo

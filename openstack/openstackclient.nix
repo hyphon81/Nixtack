@@ -18,7 +18,7 @@ buildPythonPackage rec {
   };
 
   propagatedBuildInputs = [
-    pbr
+    modpacks.pbr
     six
     Babel
     modpacks.cliff
@@ -31,14 +31,14 @@ buildPythonPackage rec {
     modpacks.novaclient
     modpacks.cinderclient
     modpacks.neutronclient
-    requests2
+    modpacks.requests
     modpacks.stevedore
     modpacks.cliff-tablib
     modpacks.osc-lib
     modpacks.openstacksdk
   ];
   buildInputs = [
-    requests-mock
+    modpacks.requests-mock
   ];
 
   ## can't pass test

@@ -33,7 +33,7 @@ buildPythonApplication rec {
 
   # https://github.com/openstack/neutron/blob/stable/liberty/requirements.txt
   propagatedBuildInputs = [
-    pbr
+    modpacks.pbr
     paste
     PasteDeploy
     modpacks.routes
@@ -41,14 +41,14 @@ buildPythonApplication rec {
     modpacks.eventlet
     greenlet
     httplib2
-    requests2
+    modpacks.requests
     jinja2
     modpacks.keystonemiddleware
-    netaddr
-    netifaces
+    modpacks.netaddr
+    modpacks.netifaces
     modpacks.neutron-lib
     retrying
-    sqlalchemy
+    modpacks.sqlalchemy
     modpacks.webob
     modpacks.keystoneauth1
     modpacks.alembic
@@ -102,15 +102,15 @@ buildPythonApplication rec {
   buildInputs = [
     modpacks.cliff
     coverage
-    fixtures
-    mock
-    subunit
-    requests-mock
-    oslosphinx
-    testrepository
-    testtools
+    modpacks.fixtures
+    modpacks.mock
+    modpacks.subunit
+    modpacks.requests-mock
+    modpacks.oslosphinx_4_10
+    modpacks.testrepository
+    modpacks.testtools
     testresources
-    testscenarios
+    modpacks.testscenarios
     modpacks.webtest
     modpacks.oslotest
     modpacks.os-testr

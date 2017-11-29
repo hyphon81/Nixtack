@@ -50,24 +50,24 @@ buildPythonApplication rec {
 
   # https://github.com/openstack/nova/blob/stable/liberty/requirements.txt
   propagatedBuildInputs = [
-    pbr
-    sqlalchemy
+    modpacks.pbr
+    modpacks.sqlalchemy
     modpacks.boto
     decorator
     modpacks.eventlet
     jinja2
     lxml
     modpacks.routes
-    cryptography
+    modpacks.cryptography
     modpacks.webob
     greenlet
     PasteDeploy
     paste
     prettytable
     modpacks.sqlalchemy_migrate
-    netaddr
-    netifaces
-    paramiko
+    modpacks.netaddr
+    modpacks.netifaces
+    modpacks.paramiko
     Babel
     iso8601
     jsonschema
@@ -76,7 +76,7 @@ buildPythonApplication rec {
     modpacks.neutronclient
     modpacks.glanceclient
     modpacks.keystoneclient
-    requests2
+    modpacks.requests
     six
     modpacks.stevedore
     modpacks.websockify
@@ -113,7 +113,7 @@ buildPythonApplication rec {
     modpacks.oslo-versionedobjects
     modpacks.oslo-middleware 
 
-    libvirt
+    modpacks.libvirt
     memcached
     pythonHasOsloConcMod
     #spice
@@ -122,17 +122,17 @@ buildPythonApplication rec {
 
   buildInputs = [
     coverage
-    fixtures
-    mock
-    mox3
-    subunit
-    requests-mock
+    modpacks.fixtures
+    modpacks.mock
+    modpacks.mox3
+    modpacks.subunit
+    modpacks.requests-mock
     pillow
-    oslosphinx
+    modpacks.oslosphinx_4_10
     modpacks.oslotest
-    testrepository
+    modpacks.testrepository
     testresources
-    testtools
+    modpacks.testtools
     modpacks.tempest-lib
     modpacks.bandit
     modpacks.oslo-vmware

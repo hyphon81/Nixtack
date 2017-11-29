@@ -18,11 +18,48 @@ let
   };
 
   sqlite3 = if builtins.hasAttr "sqlite3" pkgs then pkgs.sqlite3 else pkgs.sqlite;
-  requests2 = if builtins.hasAttr "requests2" pkgs then pkgs.python2Packages.requests2 else pkgs.python2Packages.requests;
+  mod-libvirt = callPackage ../libvirt/libvirt.nix {};
 in
 
 with python2Packages;
 {
+  requests = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "requests";
+    version = "2.13.0";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "1s0wg4any4dsv5l3hqjxqk2zgb7pdbqhy9rhc8kh3aigfq4ws8jp";
+    };
+
+    outputs = [ "out" "dev" ];
+
+    nativeBuildInputs = [ pytest ];
+    propagatedBuildInputs = [
+      modpacks.urllib3
+      modpacks.idna
+      chardet
+      certifi
+    ];
+    # sadly, tests require networking
+    doCheck = false;
+  };
+
+  pbr = buildPythonPackage rec {
+    name = "pbr-${version}";
+    version = "1.9.1";
+
+    PBR_VERSION = "${version}";
+
+    src = fetchurl {
+      url = "https://github.com/openstack-dev/pbr/archive/${version}.tar.gz";
+      sha256 = "19l3xj0p71y234z1zwlxxm5rg9z943jps47k2i9mvdcvnsn3944w";
+    };
+
+    doCheck = false;
+  };
+
   oslo-policy = buildPythonPackage rec {
     name = "oslo.policy-${version}";
     version = "1.14.0";
@@ -35,7 +72,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      requests2
+      modpacks.requests
       modpacks.oslo-config
       modpacks.oslo-i18n
       modpacks.oslo-serialization
@@ -43,13 +80,13 @@ with python2Packages;
       six
       
       rfc3986
-      funcsigs
+      modpacks.funcsigs
       pyyaml
 
       modpacks.stevedore
     ];
     buildInputs = [
-      oslosphinx
+      modpacks.oslosphinx_4_10
       modpacks.httpretty
       modpacks.oslotest
 
@@ -59,7 +96,7 @@ with python2Packages;
       modpacks.oslo-config
       modpacks.oslo-i18n
       #rfc3986
-      requests-mock
+      modpacks.requests-mock
     ];
 
   };
@@ -76,10 +113,10 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      argparse
-      pbr
+      modpacks.argparse
+      modpacks.pbr
       six
-      netaddr
+      modpacks.netaddr
       modpacks.stevedore
       modpacks.oslo-i18n
       modpacks.debtcollector
@@ -88,7 +125,7 @@ with python2Packages;
       wrapt
     ];
     buildInputs = [
-      mock
+      modpacks.mock
     ];
 
     # TODO: circular import on oslo-i18n
@@ -107,13 +144,13 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
       six
       #oslo-config
     ];
     buildInputs = [
-      mock
+      modpacks.mock
       coverage
       modpacks.oslotest
     ];
@@ -140,18 +177,18 @@ with python2Packages;
     '';
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
       six
       wrapt
-      funcsigs
+      modpacks.funcsigs
     ];
 
     buildInputs = [
-      testtools
-      testscenarios
-      testrepository
-      subunit
+      modpacks.testtools
+      modpacks.testscenarios
+      modpacks.testrepository
+      modpacks.subunit
       coverage
       modpacks.oslotest
     ];
@@ -172,13 +209,13 @@ with python2Packages;
     doCheck = false;
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       six
-      argparse
+      modpacks.argparse
     ];
 
     buildInputs = [
-      oslosphinx
+      modpacks.oslosphinx_4_10
     ];
   };
 
@@ -194,26 +231,26 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
       six
       iso8601
       pytz
-      netaddr
-      netifaces
+      modpacks.netaddr
+      modpacks.netifaces
       modpacks.monotonic
       modpacks.oslo-i18n
       wrapt
       modpacks.debtcollector
 
       pyparsing
-      funcsigs
+      modpacks.funcsigs
     ];
     buildInputs = [
       modpacks.oslotest
-      mock
+      modpacks.mock
       coverage
-      oslosphinx
+      modpacks.oslosphinx_4_10
 
       #modpacks.monotonic
     ];
@@ -239,18 +276,18 @@ with python2Packages;
     '';
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
       six
       iso8601
       pytz
       modpacks.oslo-utils
       msgpack
-      netaddr
+      modpacks.netaddr
     ];
     buildInputs = [
       modpacks.oslotest
-      mock
+      modpacks.mock
       coverage
       simplejson
       modpacks.oslo-i18n
@@ -284,18 +321,20 @@ with python2Packages;
     '';
 
     propagatedBuildInputs = [
-      pbr
-      fixtures
-      subunit
+      modpacks.pbr
+      modpacks.fixtures
+      modpacks.subunit
       six
-      testrepository
-      testscenarios
-      testtools
-      mock
-      mox3
+      modpacks.testrepository
+      modpacks.testscenarios
+      modpacks.testtools
+      modpacks.mock
+      modpacks.mox3
       #modpacks.oslo-config
       modpacks.os-client-config
     ];
+
+    doCheck = false;
   };
 
   os-client-config = buildPythonPackage rec {
@@ -319,11 +358,11 @@ with python2Packages;
       jsonschema
     ];
     buildInputs = [
-      pbr
-      testtools
-      testscenarios
-      testrepository
-      fixtures
+      modpacks.pbr
+      modpacks.testtools
+      modpacks.testscenarios
+      modpacks.testrepository
+      modpacks.fixtures
     ];
 
     ## can't pass test
@@ -355,9 +394,9 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      argparse
+      modpacks.argparse
       iso8601
-      requests2
+      modpacks.requests
       six
       modpacks.stevedore
       modpacks.webob
@@ -366,20 +405,20 @@ with python2Packages;
       lxml
       modpacks.positional
       pyyaml
-      betamax
-      pbr
-      oauthlib
+      modpacks.betamax
+      modpacks.pbr
+      modpacks.oauthlib
       modpacks.requests-kerberos
     ];
     buildInputs = [
-      testtools
+      modpacks.testtools
       testresources
-      testrepository
-      mock
+      modpacks.testrepository
+      modpacks.mock
       pep8
-      fixtures
-      mox3
-      requests-mock
+      modpacks.fixtures
+      modpacks.mox3
+      modpacks.requests-mock
 
     ];
 
@@ -399,7 +438,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      requests2
+      modpacks.requests
       modpacks.pykerberos
     ];
   };
@@ -430,7 +469,7 @@ with python2Packages;
     };
 
     propagatedNativeBuildInputs = [
-      pbr
+      modpacks.pbr
       wrapt
     ];
 
@@ -449,23 +488,23 @@ with python2Packages;
     PBR_VERSION = "${version}";
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       modpacks.oslo-serialization
       modpacks.oslo-config
       modpacks.oslo-i18n
       modpacks.oslo-utils
       Babel
-      argparse
+      modpacks.argparse
       prettytable
-      requests2
+      modpacks.requests
       six
       iso8601
       modpacks.stevedore
-      netaddr
+      modpacks.netaddr
       modpacks.debtcollector
       modpacks.bandit
       modpacks.webob
-      mock
+      modpacks.mock
       pycrypto
       modpacks.positional
 
@@ -473,11 +512,11 @@ with python2Packages;
       modpacks.keystoneauth1
     ];
     buildInputs = [
-      testtools
+      modpacks.testtools
       testresources
-      testrepository
-      requests-mock
-      fixtures
+      modpacks.testrepository
+      modpacks.requests-mock
+      modpacks.fixtures
       pkgs.openssl
       modpacks.oslotest
       pep8
@@ -508,14 +547,14 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
       modpacks.oslo-config
       modpacks.oslo-context
       modpacks.oslo-i18n
       modpacks.oslo-serialization
       modpacks.oslo-utils
-      requests2
+      modpacks.requests
       six
       modpacks.webob
       modpacks.keystoneclient
@@ -530,17 +569,17 @@ with python2Packages;
       modpacks.keystoneauth1
     ];
     buildInputs = [
-      fixtures
-      mock
+      modpacks.fixtures
+      modpacks.mock
       pycrypto
-      oslosphinx
+      modpacks.oslosphinx_4_10
       modpacks.oslotest
       modpacks.stevedore
-      testrepository
+      modpacks.testrepository
       testresources
-      testtools
+      modpacks.testtools
       modpacks.bandit
-      requests-mock
+      modpacks.requests-mock
     ];
 
     # lots of "unhashable type" errors
@@ -573,7 +612,7 @@ with python2Packages;
       rfc3986
     ];
     buildInputs = [
-      oslosphinx
+      modpacks.oslosphinx_4_10
       modpacks.oslotest
 
     ];
@@ -596,27 +635,27 @@ with python2Packages;
 
    buildInputs = [
      modpacks.oslo-i18n
-     argparse
+     modpacks.argparse
      six
      wrapt
      modpacks.oslo-utils
-     pbr
+     modpacks.pbr
      enum34
      Babel
-     netaddr
+     modpacks.netaddr
      modpacks.monotonic
      iso8601
      modpacks.oslo-config
      pytz
-     netifaces
+     modpacks.netifaces
      modpacks.stevedore
      modpacks.debtcollector
      retrying
      modpacks.fasteners
      modpacks.eventlet
 
-     oslosphinx
-     fixtures
+     modpacks.oslosphinx_4_10
+     modpacks.fixtures
      futures
      coverage
      modpacks.oslotest
@@ -641,7 +680,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
       modpacks.debtcollector
       modpacks.positional
@@ -649,7 +688,7 @@ with python2Packages;
     buildInputs = [
       modpacks.oslotest
       coverage
-      oslosphinx
+      modpacks.oslosphinx_4_10
     ];
     patchPhase = ''
       sed -i 's@python@${python.interpreter}@' .testr.conf
@@ -668,7 +707,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       modpacks.oslo-config
       modpacks.oslo-context
       modpacks.oslo-log
@@ -709,14 +748,14 @@ with python2Packages;
 
     buildInputs = [
       modpacks.oslotest
-      mock
-      mox3
-      subunit
-      testtools
-      testscenarios
-      testrepository
-      fixtures
-      oslosphinx
+      modpacks.mock
+      modpacks.mox3
+      modpacks.subunit
+      modpacks.testtools
+      modpacks.testscenarios
+      modpacks.testrepository
+      modpacks.fixtures
+      modpacks.oslosphinx_4_10
 
       modpacks.pika-pool
     ];
@@ -744,7 +783,7 @@ with python2Packages;
       six
       modpacks.stevedore
       modpacks.sqlalchemy_migrate
-      sqlalchemy
+      modpacks.sqlalchemy
       modpacks.oslo-utils
       modpacks.oslo-context
       modpacks.oslo-config
@@ -752,7 +791,7 @@ with python2Packages;
       iso8601
       Babel
       modpacks.alembic
-      pbr
+      modpacks.pbr
       psycopg2
 
       rfc3986
@@ -760,7 +799,7 @@ with python2Packages;
     buildInputs = [
       modpacks.tempest-lib
       testresources
-      mock
+      modpacks.mock
       modpacks.oslotest
 
     ];
@@ -782,7 +821,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
       six
       iso8601
@@ -797,7 +836,7 @@ with python2Packages;
     ] ++ stdenv.lib.optional stdenv.isLinux pyinotify;
     buildInputs = [
       modpacks.oslotest
-      oslosphinx
+      modpacks.oslosphinx_4_10
 
       #dateutil
       rfc3986
@@ -829,7 +868,7 @@ with python2Packages;
       modpacks.oslo-i18n
       six
       modpacks.oslo-utils
-      pbr
+      modpacks.pbr
       modpacks.oslo-config
       Babel
       modpacks.oslo-context
@@ -840,8 +879,8 @@ with python2Packages;
     ];
     buildInputs = [
       coverage
-      testtools
-      oslosphinx
+      modpacks.testtools
+      modpacks.oslosphinx_4_10
       modpacks.oslotest
 
       statsd
@@ -893,32 +932,31 @@ with python2Packages;
       modpacks.routes
       msgpack
       modpacks.oslo-i18n
-      argparse
+      modpacks.argparse
       modpacks.oslo-utils
-      pbr
+      modpacks.pbr
       enum34
-      netaddr
+      modpacks.netaddr
       modpacks.stevedore
-      netifaces
+      modpacks.netifaces
       pyinotify
       modpacks.webob
       retrying
-      pyinotify
 
       modpacks.fasteners
       pythonHasOsloConcMod
     ];
     buildInputs = [
-      oslosphinx
+      modpacks.oslosphinx_4_10
       modpacks.oslotest
       pkgs.procps
-      mock
-      mox3
-      fixtures
-      subunit
-      testrepository
-      testtools
-      testscenarios
+      modpacks.mock
+      modpacks.mox3
+      modpacks.fixtures
+      modpacks.subunit
+      modpacks.testrepository
+      modpacks.testtools
+      modpacks.testscenarios
       modpacks.eventlet
 
       rfc3986
@@ -932,6 +970,8 @@ with python2Packages;
     preCheck = ''
       rm oslo_service/tests/test_service.py
     '';
+
+    doCheck = false;
     
   };
 
@@ -955,17 +995,17 @@ with python2Packages;
     '';
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
-      testrepository
-      subunit
-      testtools
+      modpacks.testrepository
+      modpacks.subunit
+      modpacks.testtools
     ];
     buildInputs = [
       coverage
-      oslosphinx
+      modpacks.oslosphinx_4_10
       modpacks.oslotest
-      testscenarios
+      modpacks.testscenarios
       six
       ddt
     ];
@@ -1040,7 +1080,7 @@ with python2Packages;
     };
 
     # most of these are simply to allow the test suite to do its job
-    buildInputs = pkgs.lib.optionals isPy27 [ mock unittest2 nose redis qpid-python pymongo sqlalchemy pyyaml msgpack modpacks.boto ];
+    buildInputs = pkgs.lib.optionals isPy27 [ modpacks.mock modpacks.unittest2 nose redis qpid-python pymongo modpacks.sqlalchemy pyyaml msgpack modpacks.boto ];
 
     propagatedBuildInputs = [ modpacks.amqp_1 anyjson ] ++
       (pkgs.lib.optionals (pkgs.lib.versionOlder python.pythonVersion "2.7") [ importlib ordereddict ]);
@@ -1059,7 +1099,7 @@ with python2Packages;
       sha256 = "06n6q0kxhjnbfz3vn8x9yz09lwmn1xi9d6wxp31h5jbks0b4vsid";
     };
 
-    buildInputs = [ mock coverage nose-cover3 unittest2 ];
+    buildInputs = [ modpacks.mock coverage nose-cover3 modpacks.unittest2 ];
 
   };
 
@@ -1080,18 +1120,18 @@ with python2Packages;
 
      propagatedBuildInputs = [
        contextlib2
-       pbr
+       modpacks.pbr
        six
        modpacks.monotonic
        futures
        modpacks.eventlet
      ];
      buildInputs = [
-       testtools
-       testscenarios
-       testrepository
+       modpacks.testtools
+       modpacks.testscenarios
+       modpacks.testrepository
        modpacks.oslotest
-       subunit
+       modpacks.subunit
        prettytable
      ];
 
@@ -1108,14 +1148,14 @@ with python2Packages;
 
     propagatedBuildInputs = [
       modpacks.oslo-i18n
-      argparse
+      modpacks.argparse
       six
       wrapt
       modpacks.oslo-utils
-      pbr
+      modpacks.pbr
       modpacks.oslo-config
       Babel
-      netaddr
+      modpacks.netaddr
       modpacks.monotonic
       iso8601
       pytz
@@ -1123,12 +1163,12 @@ with python2Packages;
       modpacks.oslo-serialization
       msgpack
       modpacks.debtcollector
-      netifaces
+      modpacks.netifaces
     ];
     buildInputs = [
-      oslosphinx
-      testtools
-      testrepository
+      modpacks.oslosphinx_4_10
+      modpacks.testtools
+      modpacks.testrepository
       modpacks.oslotest
 
       rfc3986
@@ -1159,21 +1199,21 @@ with python2Packages;
     '';
 
     buildInputs = [
-      testtools
-      testrepository
-      subunit
+      modpacks.testtools
+      modpacks.testrepository
+      modpacks.subunit
       modpacks.oslotest
 
       rfc3986
     ];
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       six
-      paramiko
+      modpacks.paramiko
       httplib2
       jsonschema
       iso8601
-      fixtures
+      modpacks.fixtures
       Babel
       modpacks.oslo-log
       modpacks.os-testr
@@ -1197,7 +1237,7 @@ with python2Packages;
     propagatedBuildInputs = [
       six
       modpacks.monotonic
-      testtools
+      modpacks.testtools
     ];
 
     checkPhase = ''
@@ -1220,7 +1260,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       six
       pyyaml
       appdirs
@@ -1228,12 +1268,12 @@ with python2Packages;
     ];
     buildInputs = [
       beautifulsoup4
-      oslosphinx
-      testtools
-      testscenarios
-      testrepository
-      fixtures
-      mock
+      modpacks.oslosphinx_4_10
+      modpacks.testtools
+      modpacks.testscenarios
+      modpacks.testrepository
+      modpacks.fixtures
+      modpacks.mock
     ];
     patchPhase = ''
       sed -i 's@python@${python.interpreter}@' .testr.conf
@@ -1284,7 +1324,7 @@ with python2Packages;
     buildInputs = [
       nose
       httplib2
-      pyopenssl
+      modpacks.pyopenssl
     ];
 
     doCheck = false;  # too much transient errors to bother
@@ -1348,7 +1388,7 @@ with python2Packages;
 
     buildInputs = pkgs.lib.optionals isPy26 [
       ordereddict
-      unittest2
+      modpacks.unittest2
     ];
 
     propagatedBuildInputs = [
@@ -1357,7 +1397,7 @@ with python2Packages;
       six
       beautifulsoup4
       waitress
-      mock
+      modpacks.mock
       modpacks.pyquery
       modpacks.wsgiproxy2
       PasteDeploy
@@ -1379,12 +1419,12 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
-      argparse
+      modpacks.pbr
+      modpacks.argparse
       six
       modpacks.webob
       
-      netaddr
+      modpacks.netaddr
       #modpacks.oslo-concurrency
       modpacks.oslo-log
       modpacks.oslo-messaging
@@ -1397,12 +1437,12 @@ with python2Packages;
       pythonHasOsloConcMod
     ];
     buildInputs = [
-      oslosphinx
+      modpacks.oslosphinx_4_10
       coverage
-      mock
-      subunit
-      testrepository
-      testtools
+      modpacks.mock
+      modpacks.subunit
+      modpacks.testrepository
+      modpacks.testtools
 
       rfc3986
     ];
@@ -1414,6 +1454,8 @@ with python2Packages;
     patchPhase = ''
       sed -i 's@python@${python.interpreter}@' .testr.conf
     '';
+
+    doCheck = false;
   };
 
   repoze_who = buildPythonPackage rec {
@@ -1447,19 +1489,19 @@ with python2Packages;
     propagatedBuildInputs = [
       modpacks.repoze_who
       paste
-      cryptography
+      modpacks.cryptography
       pycrypto
-      pyopenssl
-      ipaddress
+      modpacks.pyopenssl
+      modpacks.ipaddress
       six
       cffi
-      idna
+      modpacks.idna
       enum34
       pytz
       setuptools
       zope_interface
       dateutil
-      requests2
+      modpacks.requests
       pyasn1
       modpacks.webob
       decorator
@@ -1510,12 +1552,12 @@ with python2Packages;
     buildInputs = [
       pytest
       pytestcov
-      mock
+      modpacks.mock
       coverage
     ];
     propagatedBuildInputs = [
       Mako
-      sqlalchemy
+      modpacks.sqlalchemy
       python-editor
     ];
 
@@ -1552,8 +1594,8 @@ with python2Packages;
       futures
       six
       wrapt
-      funcsigs
-      pbr
+      modpacks.funcsigs
+      modpacks.pbr
     ];
   };
 
@@ -1572,7 +1614,7 @@ with python2Packages;
       asyncio
     ];
     buildInputs = [
-      mock
+      modpacks.mock
     ];
 
     # 2 tests error out
@@ -1597,9 +1639,9 @@ with python2Packages;
       six
       modpacks.stevedore
       modpacks.cliff
-      fixtures
+      modpacks.fixtures
       xattr
-      testtools
+      modpacks.testtools
     ];
   };
 
@@ -1615,9 +1657,9 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      argparse
+      modpacks.argparse
       pyyaml
-      pbr
+      modpacks.pbr
       six
       cmd2
       modpacks.stevedore
@@ -1627,9 +1669,9 @@ with python2Packages;
     ];
     buildInputs = [
       httplib2
-      oslosphinx
+      modpacks.oslosphinx_4_10
       coverage
-      mock
+      modpacks.mock
       nose
       modpacks.tempest-lib
 
@@ -1652,14 +1694,14 @@ with python2Packages;
     propagatedBuildInputs = [
       tox
       pytest
-      mock
+      modpacks.mock
       
     ];
 
     doCheck = false;
   };
 
-  sqlalchemy_migrate_func = sqlalchemy: buildPythonPackage rec {
+  sqlalchemy_migrate = buildPythonPackage rec {
     name = "sqlalchemy-migrate-0.10.0";
 
     src = fetchurl {
@@ -1668,19 +1710,19 @@ with python2Packages;
     };
 
     buildInputs = [
-      unittest2
+      modpacks.unittest2
       scripttest
       pytz
-      pylint
+      modpacks.pylint
       modpacks.tempest-lib
-      mock
-      testtools
+      modpacks.mock
+      modpacks.testtools
     ];
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       tempita
       decorator
-      sqlalchemy
+      modpacks.sqlalchemy
       six
       sqlparse
     ];
@@ -1699,8 +1741,6 @@ with python2Packages;
 
   };
 
-  sqlalchemy_migrate = modpacks.sqlalchemy_migrate_func sqlalchemy;
-
   ceilometerclient = buildPythonPackage rec {
     name = "python-ceilometerclient-${version}";
     version = "2.6.2";
@@ -1718,7 +1758,7 @@ with python2Packages;
       modpacks.oslo-utils
       modpacks.oslo-serialization
       modpacks.positional
-      funcsigs
+      modpacks.funcsigs
     ];
 
     doCheck = false;
@@ -1734,9 +1774,9 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      argparse
+      modpacks.argparse
       pyyaml
-      pbr
+      modpacks.pbr
       six
       cmd2
       tablib
@@ -1764,7 +1804,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       six
       Babel
       modpacks.cliff
@@ -1774,7 +1814,7 @@ with python2Packages;
       modpacks.oslo-utils
       modpacks.stevedore
       simplejson
-      funcsigs
+      modpacks.funcsigs
     ];
 
     ## can't pass test
@@ -1793,7 +1833,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       six
       modpacks.stevedore
       modpacks.os-client-config
@@ -1822,12 +1862,12 @@ with python2Packages;
       modpacks.oslo-i18n
       modpacks.oslo-utils
       six
-      requests2
+      modpacks.requests
       modpacks.keystoneclient
       prettytable
       Babel
-      pbr
-      argparse
+      modpacks.pbr
+      modpacks.argparse
       warlock
       modpacks.keystoneauth1
       rfc3986
@@ -1838,7 +1878,7 @@ with python2Packages;
     ];
     buildInputs = [
       modpacks.tempest-lib
-      requests-mock
+      modpacks.requests-mock
     ];
 
     checkPhase = ''
@@ -1859,18 +1899,18 @@ with python2Packages;
     PBR_VERSION = "${version}";
 
     buildInputs = [
-      pbr
-      testtools
-      testscenarios
-      testrepository
-      requests-mock
-      fixtures
+      modpacks.pbr
+      modpacks.testtools
+      modpacks.testscenarios
+      modpacks.testrepository
+      modpacks.requests-mock
+      modpacks.fixtures
     ];
     propagatedBuildInputs = [
       Babel
-      argparse
+      modpacks.argparse
       prettytable
-      requests2
+      modpacks.requests
       simplejson
       six
       iso8601
@@ -1905,17 +1945,17 @@ with python2Packages;
       six
       Babel
       simplejson
-      requests2
+      modpacks.requests
       modpacks.keystoneclient
       prettytable
-      argparse
-      pbr
+      modpacks.argparse
+      modpacks.pbr
       modpacks.keystoneauth1
       ddt
     ];
     buildInputs = [
-      testrepository
-      requests-mock
+      modpacks.testrepository
+      modpacks.requests-mock
     ];
 
     ## can't pass test
@@ -1939,25 +1979,25 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       six
       simplejson
       modpacks.keystoneclient
-      requests2
+      modpacks.requests
       modpacks.oslo-utils
       modpacks.oslo-serialization
       modpacks.oslo-i18n
-      netaddr
+      modpacks.netaddr
       iso8601
       modpacks.cliff
-      argparse
+      modpacks.argparse
       modpacks.osc-lib
     ];
     buildInputs = [
       modpacks.tempest-lib
-      mox3
+      modpacks.mox3
       modpacks.oslotest
-      requests-mock
+      modpacks.requests-mock
     ];
 
     ## can't pass test
@@ -1983,7 +2023,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
     ];
   };
 
@@ -2000,13 +2040,13 @@ with python2Packages;
 
     propagatedBuildInputs = [
       modpacks.castellan
-      cryptography
+      modpacks.cryptography
       lxml
-      netifaces
+      modpacks.netifaces
       modpacks.oslo-i18n
       modpacks.oslo-serialization
       modpacks.oslo-utils
-      pbr
+      modpacks.pbr
       six
     ];
 
@@ -2027,7 +2067,7 @@ with python2Packages;
 
     propagatedBuildInputs = [
       modpacks.barbicanclient
-      pbr
+      modpacks.pbr
       modpacks.oslo-utils
       modpacks.oslo-log
       modpacks.oslo-i18n
@@ -2035,7 +2075,7 @@ with python2Packages;
       modpacks.oslo-config
       modpacks.oslo-policy
       modpacks.keystoneauth1
-      cryptography
+      modpacks.cryptography
       Babel
     ];
 
@@ -2056,8 +2096,8 @@ with python2Packages;
 
     propagatedBuildInputs = [
       six
-      requests2
-      #pbr
+      modpacks.requests
+      #modpacks.pbr
       modpacks.oslo-utils
       modpacks.oslo-serialization
       modpacks.oslo-i18n
@@ -2070,7 +2110,7 @@ with python2Packages;
     ];
 
     buildInputs = [
-      pbr
+      modpacks.pbr
     ];
 
     ## can't pass test
@@ -2101,8 +2141,8 @@ with python2Packages;
       modpacks.debtcollector
       jsonschema
       modpacks.keystoneclient
-      requests2
-      pbr
+      modpacks.requests
+      modpacks.pbr
       modpacks.keystoneauth1
       rfc3986
 
@@ -2127,7 +2167,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       six
       enum34
       modpacks.futurist
@@ -2147,7 +2187,7 @@ with python2Packages;
     ];
 
     buildInputs = [
-      oslosphinx
+      modpacks.oslosphinx_4_10
       pymysql
       psycopg2
       modpacks.alembic
@@ -2156,9 +2196,9 @@ with python2Packages;
       kazoo
       zake
       kombu
-      testscenarios
-      testtools
-      mock
+      modpacks.testscenarios
+      modpacks.testtools
+      modpacks.mock
       modpacks.oslotest
       modpacks.debtcollector
       modpacks.sqlalchmy_utils
@@ -2185,19 +2225,19 @@ with python2Packages;
 
     propagatedBuildInputs = [
       wrapt
-      pbr
+      modpacks.pbr
       Babel
       six
       pytz
       prettytable
       modpacks.debtcollector
 
-      funcsigs
+      modpacks.funcsigs
     ];
     buildInputs = [
-      testtools
-      testscenarios
-      testrepository
+      modpacks.testtools
+      modpacks.testscenarios
+      modpacks.testrepository
     ];
     patchPhase = ''
       sed -i 's@python@${python.interpreter}@' .testr.conf
@@ -2214,7 +2254,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      sqlalchemy
+      modpacks.sqlalchemy
       six
     ];
   };
@@ -2254,10 +2294,10 @@ with python2Packages;
     '';
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       six
       simplegeneric
-      netaddr
+      modpacks.netaddr
       pytz
       modpacks.webob
     ];
@@ -2268,7 +2308,7 @@ with python2Packages;
       modpacks.pecan
       transaction
       cherrypy
-      sphinx
+      modpacks.sphinx
     ];
   };
 
@@ -2303,7 +2343,7 @@ with python2Packages;
       modpacks.webtest
       zope_component
       zope_interface
-    ] ++ stdenv.lib.optional isPy26 unittest2;
+    ] ++ stdenv.lib.optional isPy26 modpacks.unittest2;
 
     propagatedBuildInputs = [
       PasteDeploy
@@ -2345,15 +2385,15 @@ with python2Packages;
      modpacks.os-win
      modpacks.eventlet
      Babel
-     pbr
-     requests2
+     modpacks.pbr
+     modpacks.requests
 
      modpacks.castellan
    ];
    buildInputs = [
-     testtools
-     testscenarios
-     testrepository
+     modpacks.testtools
+     modpacks.testscenarios
+     modpacks.testrepository
    ];
 
    checkPhase = ''
@@ -2376,14 +2416,14 @@ with python2Packages;
     propagatedBuildInputs = [
       modpacks.stevedore
       six
-      pbr
+      modpacks.pbr
       modpacks.oslo-versionedobjects
       modpacks.oslo-privsep
       modpacks.oslo-log
       modpacks.oslo-i18n
       modpacks.oslo-config
       #modpacks.oslo-concurrency
-      netaddr
+      modpacks.netaddr
     ];
 
     ## can't pass test
@@ -2402,7 +2442,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       modpacks.oslo-utils
       modpacks.oslo-log
       modpacks.oslo-i18n
@@ -2433,9 +2473,9 @@ with python2Packages;
 
     buildInputs = [
       coverage
-      oslosphinx
-      testrepository
-      testtools
+      modpacks.oslosphinx_4_10
+      modpacks.testrepository
+      modpacks.testtools
       modpacks.webob
     ];
   };
@@ -2473,7 +2513,7 @@ with python2Packages;
       psutil_1
       Babel
       jinja2
-      pbr
+      modpacks.pbr
 
       modpacks.oslo-config
       rfc3986
@@ -2482,7 +2522,7 @@ with python2Packages;
       coverage
       greenlet
       modpacks.eventlet
-      oslosphinx
+      modpacks.oslosphinx_4_10
       modpacks.oslotest
     ];
 
@@ -2504,12 +2544,12 @@ with python2Packages;
 
     propagatedBuildInputs = [
       six
-      pbr
+      modpacks.pbr
       modpacks.eventlet
     ];
 
     buildInputs = [
-      mock
+      modpacks.mock
       modpacks.oslotest
     ];
 
@@ -2548,7 +2588,7 @@ with python2Packages;
       cffi
       
       rfc3986
-      funcsigs
+      modpacks.funcsigs
       modpacks.positional
       modpacks.os-vif
     ];
@@ -2588,7 +2628,7 @@ with python2Packages;
       cffi
       
       rfc3986
-      funcsigs
+      modpacks.funcsigs
       modpacks.positional
       #modpacks.os-vif
     ];
@@ -2621,8 +2661,8 @@ with python2Packages;
       modpacks.oslo-log
       modpacks.oslo-i18n
       modpacks.webob
-      fixtures
-      mock
+      modpacks.fixtures
+      modpacks.mock
 
       rfc3986
       modpacks.pika-pool
@@ -2634,8 +2674,8 @@ with python2Packages;
       modpacks.oslo-service
       modpacks.futurist
       anyjson
-      oslosphinx
-      testtools
+      modpacks.oslosphinx_4_10
+      modpacks.testtools
       modpacks.oslotest
     ];
 
@@ -2653,9 +2693,9 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       modpacks.stevedore
-      netaddr
+      modpacks.netaddr
       iso8601
       six
       modpacks.oslo-i18n
@@ -2663,7 +2703,7 @@ with python2Packages;
       Babel
       pyyaml
       modpacks.eventlet
-      requests2
+      modpacks.requests
       modpacks.urllib3
       #modpacks.oslo-concurrency
       suds-jurko
@@ -2677,12 +2717,12 @@ with python2Packages;
     ];
     buildInputs = [
       modpacks.bandit
-      oslosphinx
+      modpacks.oslosphinx_4_10
       coverage
-      testtools
-      testscenarios
-      testrepository
-      mock
+      modpacks.testtools
+      modpacks.testscenarios
+      modpacks.testrepository
+      modpacks.mock
     ];
   };
 
@@ -2709,8 +2749,8 @@ with python2Packages;
       modpacks.dogpile_cache
       appdirs
       anyjson
-      pbr
-      requests2
+      modpacks.pbr
+      modpacks.requests
       mod-openstackclient
       modpacks.oslo-serialization
       modpacks.osc-lib
@@ -2718,7 +2758,7 @@ with python2Packages;
       jsonschema
       pyyaml
 
-      requests-mock
+      modpacks.requests-mock
       ddt
     ];
     buildInputs = [
@@ -2753,11 +2793,11 @@ with python2Packages;
 
     propagatedBuildInputs = [
       modpacks.pysocks
-      ipaddress
+      modpacks.ipaddress
       certifi
-      idna
-      cryptography
-      pyopenssl
+      modpacks.idna
+      modpacks.cryptography
+      modpacks.pyopenssl
 
       psutil_1
     ];
@@ -2765,7 +2805,7 @@ with python2Packages;
     buildInputs = [
       coverage
       tornado
-      mock
+      modpacks.mock
       nose
     ];
 
@@ -2799,11 +2839,11 @@ with python2Packages;
     doCheck = false;
     propagatedBuildInputs = [
       modpacks.urllib3
-      requests2
+      modpacks.requests
     ];
     buildInputs = [
       nosexcover
-      mock
+      modpacks.mock
     ];
 
   };
@@ -2820,7 +2860,7 @@ with python2Packages;
 
     buildInputs = [
       tornado
-      requests2
+      modpacks.requests
       httplib2
       sure
       nose
@@ -2865,10 +2905,10 @@ with python2Packages;
 
     buildInputs = [
       nose
-      mock
+      modpacks.mock
     ];
     propagatedBuildInputs = [
-      requests2
+      modpacks.requests
       modpacks.httpretty
     ];
   };
@@ -2886,7 +2926,7 @@ with python2Packages;
 
     propagatedBuildInputs = [
       Babel
-      sqlalchemy
+      modpacks.sqlalchemy
       modpacks.debtcollector
       modpacks.oslo-config
       modpacks.oslo-context
@@ -2897,7 +2937,7 @@ with python2Packages;
       modpacks.oslo-policy
       modpacks.oslo-service
       modpacks.oslo-utils
-      pbr
+      modpacks.pbr
 
       modpacks.positional
       modpacks.pika-pool
@@ -2921,8 +2961,8 @@ with python2Packages;
     propagatedBuildInputs = [
       modpacks.stevedore
       six
-      requests2
-      pbr
+      modpacks.requests
+      modpacks.pbr
       modpacks.oslo-utils
       modpacks.osc-lib
       modpacks.keystoneauth1
@@ -2994,7 +3034,7 @@ with python2Packages;
     propagatedBuildInputs = [
       six
       modpacks.keystoneclient
-      pbr
+      modpacks.pbr
       modpacks.oslo-policy
       modpacks.oslo-config
       modpacks.keystoneauth1
@@ -3039,9 +3079,9 @@ with python2Packages;
 
     propagatedBuildInputs = [
       six
-      requests2
+      modpacks.requests
       modpacks.swiftclient
-      pbr
+      modpacks.pbr
       modpacks.oslo-utils
       modpacks.oslo-serialization
       modpacks.oslo-i18n
@@ -3074,16 +3114,16 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
-      requests2
+      modpacks.pbr
+      modpacks.requests
       futures
       six
       modpacks.keystoneclient
     ];
     buildInputs = [
-      testtools
-      testrepository
-      mock
+      modpacks.testtools
+      modpacks.testrepository
+      modpacks.mock
     ];
 
     patchPhase = ''
@@ -3398,7 +3438,7 @@ with python2Packages;
       Mako
       genshi
       Kajiki
-      sqlalchemy
+      modpacks.sqlalchemy
       gunicorn
       jinja2
       virtualenv
@@ -3428,11 +3468,11 @@ with python2Packages;
 
     src = fetchurl {
       url = "https://github.com/openstack/networking-bgpvpn/archive/${version}.tar.gz";
-      sha256 = "0p4vz0wz63r94riaj1dsvhr3v6j0340qw6sbbmy0mn9myf4xrkbh";
+      sha256 = "0cczg7ggrngv5nw0n5x6zmrqsa7raijgcz5w1avxf1zly8lbpd6z";
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       Babel
       modpacks.oslo-config
       modpacks.oslo-db
@@ -3458,8 +3498,8 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      blockdiag
-      sphinx_1_2
+      modpacks.blockdiag
+      modpacks.sphinx
     ];
   };
 
@@ -3473,8 +3513,8 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      seqdiag
-      sphinx_1_2
+      modpacks.seqdiag
+      modpacks.sphinx
     ];
   };
 
@@ -3490,12 +3530,12 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
+      modpacks.pbr
       modpacks.oslo-config
       modpacks.oslo-i18n
       modpacks.oslo-service
       modpacks.oslo-utils
-      requests2
+      modpacks.requests
       six
       modpacks.oslo-log
 
@@ -3528,8 +3568,8 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      pbr
-      requests2
+      modpacks.pbr
+      modpacks.requests
       six
     ];
 
@@ -3547,10 +3587,10 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      paramiko
+      modpacks.paramiko
       lxml
       modpacks.ncclient
-      sqlalchemy
+      modpacks.sqlalchemy
 
       modpacks.webob
       modpacks.oslo-config
@@ -3572,7 +3612,7 @@ with python2Packages;
     };
 
     propagatedBuildInputs = [
-      paramiko
+      modpacks.paramiko
       lxml
       pkgs.libxml2
       pkgs.libxslt
@@ -3598,4 +3638,749 @@ with python2Packages;
       sha256 = "07s27177nwzrlgalgwvg14p295flzng8jm9vz2n8lca7lfij72q4";
     };
   };
+
+  sphinx = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "Sphinx";
+    version = "1.6.5";
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "c6de5dbdbb7a0d7d2757f4389cc00e8f6eb3c49e1772378967a12cfcf2cfe098";
+    };
+    LC_ALL = "en_US.UTF-8";
+
+    checkInputs = [ pytest ];
+    buildInputs = [ simplejson modpacks.mock pkgs.glibcLocales html5lib enum34 ];
+    # Disable two tests that require network access.
+    checkPhase = ''
+      cd tests; ${python.interpreter} run.py --ignore py35 -k 'not test_defaults and not test_anchors_ignored'
+    '';
+    
+    propagatedBuildInputs = [
+      docutils
+      jinja2
+      pygments
+      alabaster
+      Babel
+      snowballstemmer
+      six
+      modpacks.sqlalchemy
+      whoosh
+      imagesize
+      modpacks.requests
+      sphinxcontrib-websupport
+      typing
+    ];
+
+    # Lots of tests. Needs network as well at some point.
+    doCheck = false;
+
+    # https://github.com/NixOS/nixpkgs/issues/22501
+    # Do not run `python sphinx-build arguments` but `sphinx-build arguments`.
+    postPatch = ''
+      substituteInPlace sphinx/make_mode.py --replace "sys.executable, " ""
+    '';
+  };
+
+  testtools = buildPythonPackage rec {
+    pname = "testtools";
+    version = "1.9.0";
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "b46eec2ad3da6e83d53f2b0eca9a8debb687b4f71343a074f83a16bbdb3c0644";
+    };
+
+    propagatedBuildInputs = [
+      modpacks.pbr
+      python_mimeparse
+      extras
+      lxml
+      modpacks.unittest2
+      pyrsistent
+    ];
+    buildInputs = [
+      modpacks.traceback2
+    ];
+
+    # No tests in archive
+    doCheck = false;
+  };
+
+  mock = buildPythonPackage rec {
+    name = "mock-2.0.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/m/mock/${name}.tar.gz";
+      sha256 = "1flbpksir5sqrvq2z0dp8sl4bzbadg21sj4d42w3klpdfvgvcn5i";
+    };
+
+    buildInputs = [
+      modpacks.unittest2
+    ];
+    propagatedBuildInputs = [
+      modpacks.funcsigs
+      six
+      modpacks.pbr
+    ];
+
+    checkPhase = ''
+      ${python.interpreter} -m unittest discover
+    '';
+  };
+
+  unittest2 = buildPythonPackage rec {
+    name = "unittest2-1.1.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/u/unittest2/${name}.tar.gz";
+      sha256 = "0y855kmx7a8rnf81d3lh5lyxai1908xjp0laf4glwa4c8472m212";
+    };
+
+    doCheck = false;
+
+    postPatch = ''
+      # argparse is needed for python < 2.7, which we do not support anymore.
+      substituteInPlace setup.py --replace "argparse" ""
+      # # fixes a transient error when collecting tests, see https://bugs.launchpad.net/python-neutronclient/+bug/1508547
+      sed -i '510i\        return None, False' unittest2/loader.py
+      # https://github.com/pypa/packaging/pull/36
+      sed -i 's/version=VERSION/version=str(VERSION)/' setup.py
+    '';
+
+    propagatedBuildInputs = [
+      six
+      modpacks.traceback2
+    ];
+    buildInputs = [
+      ddt
+    ];
+  };
+
+  funcsigs = buildPythonPackage rec {
+    pname = "funcsigs";
+    version = "1.0.2";
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "0l4g5818ffyfmfs1a924811azhjj8ax9xd1cffr1mzd3ycn0zfx7";
+    };
+
+    buildInputs = [
+      modpacks.unittest2
+    ];
+  };
+
+  traceback2 = buildPythonPackage rec {
+    version = "1.4.0";
+    name = "traceback2-${version}";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/t/traceback2/traceback2-${version}.tar.gz";
+      sha256 = "0c1h3jas1jp1fdbn9z2mrgn3jj0hw1x3yhnkxp7jw34q15xcdb05";
+    };
+
+    propagatedBuildInputs = [
+      modpacks.pbr
+      linecache2
+    ];
+    # circular dependencies for tests
+    doCheck = false;
+  };
+
+  testrepository = buildPythonPackage rec {
+    name = "testrepository-${version}";
+    version = "0.0.20";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/t/testrepository/${name}.tar.gz";
+      sha256 = "1ssqb07c277010i6gzzkbdd46gd9mrj0bi0i8vn560n2k2y4j93m";
+    };
+
+    buildInputs = [
+      modpacks.testtools
+      testresources
+    ];
+    propagatedBuildInputs = [
+      modpacks.pbr
+      modpacks.subunit
+      modpacks.fixtures
+    ];
+
+    checkPhase = ''
+      ${python.interpreter} ./testr
+    '';
+  };
+
+  subunit = buildPythonPackage rec {
+    name = pkgs.subunit.name;
+    src = pkgs.subunit.src;
+
+    propagatedBuildInputs = [
+      modpacks.testtools
+      modpacks.testscenarios
+    ];
+
+    buildInputs = [
+      pkgs.pkgconfig
+      pkgs.check
+      pkgs.cppunit
+    ];
+
+    patchPhase = ''
+      sed -i 's/version=VERSION/version="${pkgs.subunit.version}"/' setup.py
+    '';
+  };
+
+  testscenarios = buildPythonPackage rec {
+    name = "testscenarios-${version}";
+    version = "0.4";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/t/testscenarios/${name}.tar.gz";
+      sha256 = "1671jvrvqlmbnc42j7pc5y6vc37q44aiwrq0zic652pxyy2fxvjg";
+    };
+
+    propagatedBuildInputs = [
+      modpacks.testtools
+    ];
+  };
+
+  fixtures = buildPythonPackage rec {
+    pname = "fixtures";
+    version = "3.0.0";
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "fcf0d60234f1544da717a9738325812de1f42c2fa085e2d9252d8fff5712b2ef";
+    };
+
+    propagatedBuildInputs = [
+      modpacks.pbr
+      modpacks.testtools
+      modpacks.mock
+    ];
+
+    checkPhase = ''
+      ${python.interpreter} -m testtools.run fixtures.test_suite
+    '';
+  };
+
+  requests-mock = buildPythonPackage rec {
+    name = "requests-mock-${version}";
+    version = "1.3.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/r/requests-mock/${name}.tar.gz";
+      sha256 = "0jr997dvk6zbmhvbpcv3rajrgag69mcsm1ai3w3rgk2jdh6rg1mx";
+    };
+
+    patchPhase = ''
+      sed -i 's@python@${python.interpreter}@' .testr.conf
+    '';
+
+    buildInputs = [
+      modpacks.pbr
+      modpacks.testtools
+      modpacks.testrepository
+      modpacks.mock
+    ];
+    propagatedBuildInputs = [
+      six
+      modpacks.requests
+    ];
+  };
+
+  mox3 = buildPythonPackage rec {
+    name = "mox3-${version}";
+    version = "0.20.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/m/mox3/${name}.tar.gz";
+      sha256 = "01jnb5rp5dyf1vspv66360yk5k72dwcfyd2pf1dwrxjk4ci4j5bv";
+    };
+
+    patchPhase = ''
+      sed -i 's@python@${python.interpreter}@' .testr.conf
+    '';
+
+    buildInputs = [
+      modpacks.subunit
+      modpacks.testrepository
+      modpacks.testtools
+      six
+    ];
+
+    propagatedBuildInputs = [
+      modpacks.pbr
+      modpacks.fixtures
+    ];
+  };
+
+  betamax = buildPythonPackage rec {
+    name = "betamax-0.8.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/b/betamax/${name}.tar.gz";
+      sha256 = "18f8v5gng3j773jlbbzx4rg1i4y2zw3m2l1zpmbvp8bh5a2q1i42";
+    };
+
+    propagatedBuildInputs = [
+      modpacks.requests
+    ];
+
+    doCheck = false;
+  };
+
+  sqlalchemy = buildPythonPackage rec {
+    pname = "SQLAlchemy";
+    name = "${pname}-${version}";
+    version = "1.0.19";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "1dcyxs72r74gy58088gl0mw8kq5rj2f2na45v9pq35k78q4adg3x";
+    };
+
+    checkInputs = [
+      pytest_30
+      modpacks.mock
+      pysqlite
+    ];
+
+    checkPhase = ''
+      py.test
+    '';
+  };
+
+  pylint = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "pylint";
+    version = "1.7.4";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "1f65b3815c3bf7524b845711d54c4242e4057dd93826586620239ecdfe591fb1";
+    };
+
+    buildInputs = [
+      pytest
+      pytestrunner
+      mccabe
+      configparser
+      backports_functools_lru_cache
+    ];
+
+    propagatedBuildInputs = [
+      modpacks.astroid
+      configparser
+      modpacks.isort
+    ];
+
+    postPatch = ''
+      # Remove broken darwin tests
+      sed -i -e '/test_parallel_execution/,+2d' pylint/test/test_self.py
+      sed -i -e '/test_py3k_jobs_option/,+4d' pylint/test/test_self.py
+      rm -vf pylint/test/test_functional.py
+    '';
+
+    checkPhase = ''
+      cd pylint/test
+      ${python.interpreter} -m unittest discover -p "*test*"
+    '';
+
+    postInstall = ''
+      mkdir -p $out/share/emacs/site-lisp
+      cp "elisp/"*.el $out/share/emacs/site-lisp/
+    '';
+  };
+
+  isort = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "isort";
+    version = "4.2.5";
+    src = fetchurl {
+      url = "mirror://pypi/i/${pname}/${name}.tar.gz";
+      sha256 = "0p7a6xaq7zxxq5vr5gizshnsbk2afm70apg97xwfdxiwyi201cjn";
+    };
+    buildInputs = [
+      modpacks.mock
+      pytest
+    ];
+    # No tests distributed
+    doCheck = false;
+  };
+
+  astroid = buildPythonPackage rec {
+    name = "${pname}-${version}";
+    pname = "astroid";
+    version = "1.5.3";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "492c2a2044adbf6a84a671b7522e9295ad2f6a7c781b899014308db25312dd35";
+    };
+
+    propagatedBuildInputs = [
+      modpacks.logilab_common
+      six
+      lazy-object-proxy
+      wrapt
+      enum34
+      singledispatch
+      backports_functools_lru_cache
+    ];
+
+    postPatch = ''
+      cd astroid/tests
+      for i in $(ls unittest*); do mv -v $i test_$i; done
+      cd ../..
+      rm -vf astroid/tests/test_unittest_inference.py
+      rm -vf astroid/tests/test_unittest_manager.py
+    '';
+
+    checkPhase = ''
+      ${python.interpreter} -m unittest discover
+    '';
+  };
+
+  logilab_common = buildPythonPackage rec {
+    pname = "logilab-common";
+    version = "1.4.1";
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "02in5555iak50gzn35bnnha9s85idmh0wwxaxz13v81z5krn077d";
+    };
+
+    propagatedBuildInputs = [
+      modpacks.unittest2
+      six
+    ];
+
+    doCheck = false;
+  };
+
+  blockdiag = buildPythonPackage rec {
+    name = "blockdiag-${version}";
+    version = "1.5.3";
+
+    src = pkgs.fetchurl {
+      url = "https://bitbucket.org/blockdiag/blockdiag/get/${version}.tar.bz2";
+      sha256 = "0r0qbmv0ijnqidsgm2rqs162y9aixmnkmzgnzgk52hiy7ydm4k8f";
+    };
+
+    buildInputs = [
+      pep8
+      nose
+      modpacks.unittest2
+      docutils
+    ];
+
+    propagatedBuildInputs = [
+      pillow
+      webcolors
+      funcparserlib
+    ];
+
+    doCheck = false;
+  };
+
+  seqdiag = buildPythonPackage rec {
+    name = "seqdiag-0.9.4";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/s/seqdiag/${name}.tar.gz";
+      sha256 = "1qa7d0m1wahvmrj95rxkb6128cbwd4w3gy8gbzncls66h46bifiz";
+    };
+
+    buildInputs = [
+      pep8
+      nose
+      modpacks.unittest2
+      docutils
+    ];
+
+    propagatedBuildInputs = [
+      modpacks.blockdiag
+    ];
+
+    doCheck = false;
+  };
+
+  netaddr = buildPythonPackage rec {
+    pname = "netaddr";
+    version = "0.7.18";
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "06dxjlbcicq7q3vqy8agq11ra01kvvd47j4mk6dmghjsyzyckxd1";
+    };
+
+    LC_ALL = "en_US.UTF-8";
+    buildInputs = [
+      pkgs.glibcLocales
+      pytest
+    ];
+
+    checkPhase = ''
+      py.test netaddr/tests
+    '';
+
+    patches = [
+      (pkgs.fetchpatch {
+        url = https://github.com/drkjam/netaddr/commit/2ab73f10be7069c9412e853d2d0caf29bd624012.patch;
+        sha256 = "08rn1s3w9424jhandy4j9sksy852ny00088zh15nirw5ajqg1dn7";
+      })
+    ];
+  };
+
+  netifaces = buildPythonPackage rec {
+    version = "0.10.5";
+    name = "netifaces-${version}";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/n/netifaces/${name}.tar.gz";
+      sha256 = "12v2bm77dgaqjm9vmb8in0zpip2hn98mf5sycfvgq5iivm9avn2r";
+    };
+  };
+
+  argparse = buildPythonPackage rec {
+    version = "1.4.0";
+    name = "argparse-${version}";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/a/argparse/${name}.tar.gz";
+      sha256 = "1r6nznp64j68ih1k537wms7h57nvppq0szmwsaf99n71bfjqkc32";
+    };
+  };
+
+  ipaddress = buildPythonPackage rec {
+    name = "ipaddress-1.0.16";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/i/ipaddress/${name}.tar.gz";
+      sha256 = "1c3imabdrw8nfksgjjflzg7h4ynjckqacb188rf541m74arq4cas";
+    };
+
+    checkPhase = ''
+      ${python.interpreter} test_ipaddress.py
+    '';
+  };
+
+  idna = buildPythonPackage rec {
+    pname = "idna";
+    version = "2.0";
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "0frxgmgi234lr9hylg62j69j4ik5zhg0wz05w5dhyacbjfnrl68n";
+    };
+  };
+
+  cryptography = buildPythonPackage rec {
+    # also bump cryptography_vectors
+    pname = "cryptography";
+    name = "${pname}-${version}";
+    version = "1.7.2";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "1ad9zmzi31fnz31qfchxcwiydvlxq88xndlgsvzr7m537n5vd347";
+    };
+
+    outputs = [ "out" "dev" ];
+
+    buildInputs = [
+      pkgs.openssl
+      modpacks.cryptography_vectors
+    ];
+    propagatedBuildInputs = [
+      modpacks.idna
+      asn1crypto
+      pyasn1
+      packaging
+      six
+      enum34
+      modpacks.ipaddress
+      cffi
+    ];
+
+    checkInputs = [
+      pytest
+      pretend
+      iso8601
+      pytz
+      hypothesis
+    ];
+
+    # The test assumes that if we're on Sierra or higher, that we use `getentropy`, but for binary
+    # compatibility with pre-Sierra for binary caches, we hide that symbol so the library doesn't
+    # use it. This boils down to them checking compatibility with `getentropy` in two different places,
+    # so let's neuter the second test.
+    postPatch = ''
+      substituteInPlace ./tests/hazmat/backends/test_openssl.py --replace '"16.0"' '"99.0"'
+    '';
+
+    # IOKit's dependencies are inconsistent between OSX versions, so this is the best we
+    # can do until nix 1.11's release
+    __impureHostDeps = [ "/usr/lib" ];
+  };
+
+  cryptography_vectors = buildPythonPackage rec {
+      # also bump cryptography
+    pname = "cryptography_vectors";
+    version = modpacks.cryptography.version;
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "1p5cw3dzgcpzmp81qb9860hn9qlcvr4rnf0fy31fbvhxl7lfxr2b";
+    };
+
+    # No tests included
+    doCheck = false;
+  };
+
+  pyopenssl = buildPythonPackage rec {
+    pname = "pyOpenSSL";
+    name = "${pname}-${version}";
+    version = "17.0.0";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "1pdg1gpmkzj8yasg6cmkhcivxcdp4c12nif88y4qvsxq5ffzxas8";
+    };
+
+    patches = pkgs.fetchpatch {
+      url = "https://github.com/pyca/pyopenssl/commit/"
+          + "a40898b5f1d472f9449a344f703fa7f90cddc21d.patch";
+      sha256 = "0bdfrhfvdfxhfknn46s4db23i3hww6ami2r1l5rfrri0pn8b8mh7";
+    };
+
+    preCheck = ''
+      sed -i 's/test_set_default_verify_paths/noop/' tests/test_ssl.py
+    '';
+
+    checkPhase = ''
+      runHook preCheck
+      export LANG="en_US.UTF-8"
+      py.test
+      runHook postCheck
+    '';
+
+    buildInputs = [
+      pkgs.openssl
+      pytest
+      pkgs.glibcLocales
+      pretend
+      flaky
+    ];
+    propagatedBuildInputs = [
+      modpacks.cryptography
+      pyasn1
+      modpacks.idna
+    ];
+  };
+
+  oauthlib = buildPythonPackage rec {
+    version = "2.0.0";
+    name = "oauthlib-${version}";
+
+    src = fetchurl {
+      url = "https://github.com/idan/oauthlib/archive/v${version}.tar.gz";
+      sha256 = "02b645a8rqh4xfs1cmj8sss8wqppiadd1ndq3av1cdjz2frfqcjf";
+    };
+
+    buildInputs = [
+      modpacks.mock
+      nose
+      modpacks.unittest2
+    ];
+
+    propagatedBuildInputs = [
+      modpacks.cryptography
+      blinker
+      modpacks.pyjwt
+    ];
+  };
+
+  pyjwt = buildPythonPackage rec {
+    version = "1.5.3";
+    name = "pyjwt-${version}";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "progrium";
+      repo = "pyjwt";
+      rev = version;
+      sha256 = "109zb3ka2lvp00r9nawa0lmljfikvhcj5yny19kcipz8mqia1gs8";
+    };
+
+    buildInputs = [
+      pytestrunner
+      pytestcov
+      pytest
+      coverage
+    ];
+    propagatedBuildInputs = [
+      modpacks.cryptography
+      ecdsa
+    ];
+
+    # We don't need this specific version
+    postPatch = ''
+      substituteInPlace setup.py --replace "pytest==2.7.3" "pytest"
+    '';
+  };
+
+  paramiko = buildPythonPackage rec {
+    pname = "paramiko";
+    version = "2.1.1";
+    name = "${pname}-${version}";
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "0xdmamqgx2ymhdm46q8flpj4fncj4wv2dqxzz0bc2dh7mnkss7fm";
+    };
+
+    propagatedBuildInputs = [
+      modpacks.cryptography
+      pyasn1
+    ];
+
+    checkPhase = ''
+      # test_util needs to resolve an hostname, thus failing when the fw blocks it
+      sed '/UtilTest/d' -i test.py
+      ${python}/bin/${python.executable} test.py --no-sftp --no-big-file
+    '';
+  };
+
+  libvirt = let
+    version = "2.5.0";
+  in assert version == mod-libvirt.version; pkgs.stdenv.mkDerivation rec {
+    name = "libvirt-python-${version}";
+
+    src = pkgs.fetchurl {
+      url = "http://libvirt.org/sources/python/${name}.tar.gz";
+      sha256 = "1lanyrk4invs5j4jrd7yvy7g8kilihjbcrgs5arx8k3bs9x7izgl";
+    };
+
+    buildInputs = [
+      python
+      pkgs.pkgconfig
+      mod-libvirt
+      lxml
+    ];
+
+    buildPhase = "${python.interpreter} setup.py build";
+
+    installPhase = "${python.interpreter} setup.py install --prefix=$out";
+  };
+
 }

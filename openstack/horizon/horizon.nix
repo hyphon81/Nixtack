@@ -33,7 +33,7 @@ buildPythonApplication rec {
   '';
 
   propagatedBuildInputs = [
-    pbr
+    modpacks.pbr
     Babel
     django_1_8
     modpacks.pint
@@ -42,7 +42,7 @@ buildPythonApplication rec {
     modpacks.django-openstack-auth
     modpacks.django-pyscss
     iso8601
-    netaddr
+    modpacks.netaddr
     
     #modpacks.oslo-concurrency
     modpacks.oslo-config
@@ -105,7 +105,7 @@ buildPythonApplication rec {
     jsonpatch
     jsonschema
     wrapt
-    futures
+    modpacks.futures
     modpacks.os-client-config
     modpacks.positional
     modpacks.cliff
@@ -116,10 +116,10 @@ buildPythonApplication rec {
     pathlib
     modpacks.monotonic
     pyparsing
-    netifaces
-    funcsigs
+    modpacks.netifaces
+    modpacks.funcsigs
     msgpack
-    requests2
+    modpacks.requests
     modpacks.stevedore
     modpacks.debtcollector
     rfc3986

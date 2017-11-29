@@ -39,15 +39,15 @@ buildPythonApplication rec {
   '';
 
   propagatedBuildInputs = [
-    pbr
-    sqlalchemy
+    modpacks.pbr
+    modpacks.sqlalchemy
     modpacks.alembic
     modpacks.automaton
     modpacks.eventlet
     modpacks.webob
     greenlet
-    netaddr
-    paramiko
+    modpacks.netaddr
+    modpacks.paramiko
     modpacks.neutronclient
     modpacks.glanceclient
     modpacks.keystoneauth1
@@ -57,7 +57,7 @@ buildPythonApplication rec {
     modpacks.stevedore
     pysendfile
     modpacks.pecan
-    requests2
+    modpacks.requests
     six
     jsonpatch
     modpacks.WSME
@@ -94,17 +94,17 @@ buildPythonApplication rec {
 
   buildInputs = [
     coverage
-    fixtures
-    mock
-    mox3
-    subunit
-    requests-mock
+    modpacks.fixtures
+    modpacks.mock
+    modpacks.mox3
+    modpacks.subunit
+    modpacks.requests-mock
     pillow
-    oslosphinx
+    modpacks.oslosphinx_4_10
     modpacks.oslotest
-    testrepository
+    modpacks.testrepository
     testresources
-    testtools
+    modpacks.testtools
     modpacks.tempest-lib
     modpacks.bandit
     pep8

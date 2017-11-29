@@ -25,8 +25,8 @@ buildPythonApplication rec {
 
   # https://github.com/openstack/glance/blob/stable/liberty/requirements.txt
   propagatedBuildInputs = [
-     pbr
-     sqlalchemy
+     modpacks.pbr
+     modpacks.sqlalchemy
      anyjson
      modpacks.eventlet
      PasteDeploy
@@ -42,7 +42,7 @@ buildPythonApplication rec {
      paste
      jsonschema
      modpacks.keystoneclient
-     pyopenssl
+     modpacks.pyopenssl
      six
      retrying
      semantic-version
@@ -52,7 +52,7 @@ buildPythonApplication rec {
      modpacks.glance_store
      modpacks.castellan
      modpacks.taskflow
-     cryptography
+     modpacks.cryptography
      xattr
      pysendfile
 
@@ -88,16 +88,16 @@ buildPythonApplication rec {
   buildInputs = with python2Packages; [
     Babel
     coverage
-    fixtures
-    mox3
-    mock
-    oslosphinx
-    requests2
-    testrepository
+    modpacks.fixtures
+    modpacks.mox3
+    modpacks.mock
+    modpacks.oslosphinx_4_10
+    modpacks.requests
+    modpacks.testrepository
     pep8
     testresources
-    testscenarios
-    testtools
+    modpacks.testscenarios
+    modpacks.testtools
     psutil_1
     modpacks.oslotest
     psycopg2
