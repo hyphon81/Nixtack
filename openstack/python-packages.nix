@@ -4234,7 +4234,7 @@ with python2Packages;
       modpacks.idna
       modpacks.asn1crypto
       modpacks.pyasn1
-      packaging
+      modpacks.packaging
       six
       enum34
       modpacks.ipaddress
