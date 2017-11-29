@@ -3975,7 +3975,7 @@ with python2Packages;
     };
 
     checkInputs = [
-      pytest_30
+      modpacks.pytest_30
       modpacks.mock
       pysqlite
     ];
@@ -4480,6 +4480,26 @@ with python2Packages;
       inherit pname version;
       sha256 = "05bxnr4wmrg62m4qr1pg1p3z7bhwrv74jll3k42pgxwl36kv0n6j";
     };
+  };
+
+  pytest_30 = buildPythonPackage rec {
+    version = "3.0.7";
+    pname = "pytest";
+    name = "${pname}-${version}";
+
+    preCheck = ''
+      # don't test bash builtins
+      rm testing/test_argcomplete.py
+    '';
+
+    src = fetchPypi {
+      inherit pname version;
+      sha256 = "b70696ebd1a5e6b627e7e3ac1365a4bc60aaf3495e843c1e70448966c5224cab";
+    };
+
+    buildInputs = [ hypothesis setuptools_scm ];
+    propagatedBuildInputs = [ py ]
+      ++ (stdenv.lib.optional isPy26 argparse);
   };
 
 }
