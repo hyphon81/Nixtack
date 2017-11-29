@@ -3698,7 +3698,7 @@ with python2Packages;
       imagesize
       modpacks.requests
       modpacks.sphinxcontrib-websupport
-      typing
+      modpacks.typing
     ];
 
     # Lots of tests. Needs network as well at some point.
@@ -4513,6 +4513,16 @@ with python2Packages;
 
     buildInputs = [ setuptools_scm ];
     doCheck = false; # No proper test
+  };
+
+  typing = buildPythonPackage rec {
+    name = "typing-${version}";
+    version = "3.5.3.0";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/t/typing/${name}.tar.gz";
+      sha256 = "08gz3grrh3vph5ib1w5x1ssnpzvj077x030lx63fxs4kwg3slbfa";
+    };
   };
 
 }
