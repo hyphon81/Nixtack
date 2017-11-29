@@ -1383,8 +1383,7 @@ with python2Packages;
       substituteInPlace setup.py --replace "nose<1.3.0" "nose"
     '';
 
-    # XXX: skipping two tests fails in python2.6
-    doCheck = ! isPy26;
+    doCheck = false;
 
     buildInputs = pkgs.lib.optionals isPy26 [
       ordereddict

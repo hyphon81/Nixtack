@@ -105,7 +105,7 @@ buildPythonApplication rec {
     jsonpatch
     jsonschema
     wrapt
-    modpacks.futures
+    futures
     modpacks.os-client-config
     modpacks.positional
     modpacks.cliff
