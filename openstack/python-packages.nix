@@ -3727,7 +3727,7 @@ with python2Packages;
       extras
       lxml
       modpacks.unittest2
-      pyrsistent
+      modpacks.pyrsistent
     ];
     buildInputs = [
       modpacks.traceback2
@@ -4523,6 +4523,24 @@ with python2Packages;
       url = "mirror://pypi/t/typing/${name}.tar.gz";
       sha256 = "08gz3grrh3vph5ib1w5x1ssnpzvj077x030lx63fxs4kwg3slbfa";
     };
+  };
+
+  pyrsistent = buildPythonPackage rec {
+    name = "pyrsistent-0.11.12";
+
+    src = pkgs.fetchurl {
+      url = "mirror://pypi/p/pyrsistent/${name}.tar.gz";
+      sha256 = "0jgyhkkq36wn36rymn4jiyqh2vdslmradq4a2mjkxfbk2cz6wpi5";
+    };
+
+    propagatedBuildInputs = [
+      six
+    ];
+    buildInputs = [
+      pytest
+      hypothesis
+    ];
+    doCheck = false;
   };
 
 }
