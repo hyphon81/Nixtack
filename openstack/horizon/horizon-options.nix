@@ -2193,7 +2193,9 @@ in
 
     services.nginx.clientMaxBodySize = "5120m";
     services.nginx.virtualHosts."horizon" = {
-      port = 80;
+      listen = [
+        { addr = "0.0.0.0"; port = 80; }
+      ];
 
       locations = {
         "/" = {

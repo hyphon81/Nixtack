@@ -571,7 +571,9 @@ in
     services.nginx.enable = true;
 
     services.nginx.virtualHosts."keystone-main" = {
-      port = 5000;
+      listen = [
+        { addr = "0.0.0.0"; port = 5000; }
+      ];
   
       locations = {
         "/" = {
@@ -585,8 +587,10 @@ in
     };
     
     services.nginx.virtualHosts."keystone-admin" = {
-      port = 35357;
-  
+      listen = [
+        { addr = "0.0.0.0"; port = 35357; }
+      ];
+
       locations = {
         "/" = {
           extraConfig = ''
